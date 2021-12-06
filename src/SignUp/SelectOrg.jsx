@@ -17,16 +17,28 @@ const SelectOrg = (props) => {
   const [orgs, setOrgList] = useState([]);
 
   const url = `${document.location.origin}/mobile~registration/values?type=inn`;
-  const urlReqTest = "http://localhost:1317/registration/values?type=inn";
-
+ 
   const getOrg = () => {
       let params = new Map();
       params.set('prefix','project')
       params.set('comand', 'GetRegistryValues')
       params.set('type', 'inn')
+      
+      
+      if (Object.keys(test).length == 0){
+        console.log("SASS")
+        setOrgList([]);
+      }
+      
+      
       axios.get(url)
         .then((response) => {
-          setOrgList(response.data);
+          if (Object.keys(response.data).length == 0){
+            setOrgList([]);
+          }else{
+            setOrgList(response.data);
+          }
+          
         });
     
   };

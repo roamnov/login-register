@@ -19,7 +19,6 @@ export default function SignIn() {
   document.title = "Вход";
   const [error, setError] = React.useState<string | null>("");
   let url= `${document.location.origin}/mobile~account`;
-  let urlTest= "http://localhost:1317/mobile~account";
   
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -30,12 +29,14 @@ export default function SignIn() {
     };
     
     axios.post(url,JSON.stringify(LoginData)).then((response)=>{
+      console.log(response.data)
         if(response.data['status'] !== undefined &&response.data['status']!== "ok" ){
           setError(response.data['status'])
-          console.log(response.data)
+         
         }
         else{
-          window.location.href = "stimate.exe:" + response.data["params"]
+          let href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
+          window.location.href = href;
         }
         
       }
@@ -94,12 +95,8 @@ export default function SignIn() {
             >
               Войти
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link to={""} >
-                  Забыли пароль?
-                </Link>
-              </Grid>
+            <Grid container justifyContent="center" alignItems="center">
+              
               <Grid item>
                 <Link to={"/signup"} >
                   {"Нет аккаунта? Зарегистрируйтесь"}

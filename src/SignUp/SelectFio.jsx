@@ -1,4 +1,4 @@
-import  {useEffect  ,useState } from "react";
+import  {useState } from "react";
 import {
   Grid,
   Autocomplete,
@@ -10,17 +10,11 @@ import axios from "axios";
 const SelectUser = (props) => {
  
   const [value, setValue] = useState();
-  const [inputValue, setInputValue] = useState("");
   const [users, setUserList] = useState(new Array);
 
 
   let url = `${document.location.origin}/mobile~registration/values?type=snils&inn=${props.inn}`;
-  const urlReqTest = `http://localhost:1317/registration/values?type=snils&inn=${props.inn}`;
-/**/
-  useEffect(() => {
-    //setValue("STAS")
-  }, [props.inn])
-
+ 
 
   const getUser = () => {
    
@@ -31,9 +25,14 @@ const SelectUser = (props) => {
       params.set('type', 'snils')
       params.set('inn',props.inn);
       axios.get(url).then((response) => {
-          setUserList(response.data);
+         
+          if (Object.keys(response.data).length == 0){
+            setUserList([]);
+          }else{
+            setUserList(response.data);
+          }
         });
-       //key={props.inn}
+       
   };
   return (
     <Grid item xs>

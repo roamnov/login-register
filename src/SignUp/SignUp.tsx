@@ -10,7 +10,6 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 //import SelectOrg from './SelectOrg';
 import SelectUser from './SelectFio';
@@ -43,7 +42,9 @@ export default function SignUp() {
     const [email, setEmail] = React.useState("");
 
     const url = `${document.location.origin}/mobile~registration/create`;
-    const urlTest = "http://localhost:1317/mobile~registration/create";
+   
+
+    
 
 
     const handleClose = () => {
@@ -56,7 +57,7 @@ export default function SignUp() {
         const data = new FormData(event.currentTarget);
         let errors= ""
         let checkbox = AllowData(event.currentTarget[10]);
-        //email = data.get('email');
+     
         
         let SignUpData = {
             login: data.get('login'),
@@ -86,15 +87,15 @@ export default function SignUp() {
           if(errors === ""){
          
           axios.post(url, JSON.stringify(SignUpData)).then((response)=>{
-            //console.log(response)
-            if(response.data["status"] === "ok"){ 
+            //console.log(response) 
+            if(response.data["status"] === "ok"){
               setStatus(true)
               setMessage(response.data["message"])
             }else{
               setStatus(false)
               setMessage(response.data["status"])
               }/**/
-            
+            setOpen(true)
             
           })
         }
