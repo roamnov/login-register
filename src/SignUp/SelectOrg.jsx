@@ -25,12 +25,6 @@ const SelectOrg = (props) => {
       params.set('type', 'inn')
       
       
-      if (Object.keys(test).length == 0){
-        console.log("SASS")
-        setOrgList([]);
-      }
-      
-      
       axios.get(url)
         .then((response) => {
           if (Object.keys(response.data).length == 0){
@@ -39,7 +33,7 @@ const SelectOrg = (props) => {
             setOrgList(response.data);
           }
           
-        });
+        });/**/
     
   };
 

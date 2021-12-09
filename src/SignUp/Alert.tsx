@@ -28,7 +28,7 @@ export default function AlertDialogSlide(props: Alert ) {
     setOpen(false)
     
     console.log(true)
-    //if(props.status === true){window.history.back();}
+    if(props.status === true){window.history.back();}
     
   };
 

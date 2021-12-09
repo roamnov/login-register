@@ -24,6 +24,8 @@ const SelectUser = (props) => {
       params.set('comand', 'GetRegistryValues')
       params.set('type', 'snils')
       params.set('inn',props.inn);
+      
+      
       axios.get(url).then((response) => {
          
           if (Object.keys(response.data).length == 0){
@@ -31,7 +33,7 @@ const SelectUser = (props) => {
           }else{
             setUserList(response.data);
           }
-        });
+        });/**/
        
   };
   return (

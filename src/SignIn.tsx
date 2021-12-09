@@ -11,7 +11,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { FormHelperText } from '@mui/material';
+import { FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const theme = createTheme();
 
@@ -19,7 +20,20 @@ export default function SignIn() {
   document.title = "Вход";
   const [error, setError] = React.useState<string | null>("");
   let url= `${document.location.origin}/mobile~account`;
+  const [showpassword, setShowPassword] = React.useState(false);
   
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showpassword)
+  };
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+  
+
+
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -72,16 +86,23 @@ export default function SignIn() {
               autoComplete="login"
               autoFocus
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Пароль"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
+             <FormControl  fullWidth variant="outlined">
+             <InputLabel htmlFor="password">Пароль</InputLabel>
+            <OutlinedInput  autoComplete="current-password"  type={showpassword ? 'text' : 'password'}  required fullWidth id="password" label="password" name="password" 
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showpassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                     />
+           </FormControl>
             <Grid item xs={12}>
             <FormHelperText error >
             {error !== "" ? `${error}` : ""}

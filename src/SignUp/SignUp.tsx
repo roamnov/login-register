@@ -17,7 +17,8 @@ import { Link } from 'react-router-dom';
 import SelectOrg from './SelectOrg';
 import AlertDialogSlide from './Alert';
 import { TransitionProps } from '@mui/material/transitions';
-import { Dialog, DialogContent, DialogContentText, Slide } from '@mui/material';
+import { Dialog, DialogContent, DialogContentText, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Slide } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 
 const Transition = React.forwardRef(function Transition(
@@ -40,10 +41,18 @@ export default function SignUp() {
     const [fio, setFio] = React.useState("")
     const [error, setError] = React.useState("");
     const [email, setEmail] = React.useState("");
+    const [showpassword, setShowPassword] = React.useState(false);
 
     const url = `${document.location.origin}/mobile~registration/create`;
    
 
+    const handleClickShowPassword = () => {
+      setShowPassword(!showpassword)
+    };
+  
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+    };
     
 
 
@@ -56,16 +65,19 @@ export default function SignUp() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         let errors= ""
-        let checkbox = AllowData(event.currentTarget[10]);
+        let checkbox = AllowData(event.currentTarget[13]);
      
         
         let SignUpData = {
             login: data.get('login'),
             email: data.get('email'),
+            password: data.get('password'),
             inn: inn,
             snils: snils,
+          
             }
-        
+            
+      
         if( checkbox === false){
           errors +="checkbox";
           setError(errors); 
@@ -83,22 +95,23 @@ export default function SignUp() {
           }
         }        
          
-          
-          if(errors === ""){
          
-          axios.post(url, JSON.stringify(SignUpData)).then((response)=>{
-            //console.log(response) 
-            if(response.data["status"] === "ok"){
-              setStatus(true)
-              setMessage(response.data["message"])
-            }else{
-              setStatus(false)
-              setMessage(response.data["status"])
-              }/**/
-            setOpen(true)
-            
-          })
-        }
+          if(errors === ""){
+            axios.post(url, JSON.stringify(SignUpData)).then((response)=>{
+                        //console.log(response) 
+                        if(response.data["status"] === "ok"){
+                          setStatus(true)
+                          setMessage(response.data["message"])
+                        }else{
+                          setStatus(false)
+                          setMessage(response.data["status"])
+                          }
+                        setOpen(true)
+                        
+                      })
+          
+          
+        } /**/
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -133,7 +146,26 @@ export default function SignUp() {
                 <TextField required fullWidth  id="login" label="Логин" name="login"   error={error.search("login") !== -1} />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <TextField value={email} onChange={handleChange} required fullWidth  id="email" label="E-mail (Электронная почта куда придет пароль)" name="email" error={error.search("email") !== -1} />
+                <TextField value={email} onChange={handleChange} required fullWidth  id="email" label="E-mail (Электронная почта для подтверждения регистрации)" name="email" error={error.search("email") !== -1} />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+              <FormControl  fullWidth variant="outlined">
+             <InputLabel htmlFor="password">Пароль</InputLabel>
+                <OutlinedInput  type={showpassword ? 'text' : 'password'}  required fullWidth id="password" label="Пароль" name="password"  error={error.search("password") !== -1}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showpassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                     />
+                     </FormControl>
               </Grid>
               <SelectOrg error={error} setBackInfo={setInn} />
               <SelectUser error={error} inn={inn} fio={fio} setBackInfo={setSnils}/>
