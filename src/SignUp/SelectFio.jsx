@@ -1,8 +1,10 @@
-import  {useState } from "react";
+import  {useState, useEffect } from "react";
 import {
   Grid,
   Autocomplete,
   TextField,
+  CircularProgress,
+  Skeleton
 } from "@mui/material";
 import axios from "axios";
 
@@ -11,35 +13,42 @@ const SelectUser = (props) => {
  
   const [value, setValue] = useState();
   const [users, setUserList] = useState(new Array);
-
+  const [loading, setLoad] = useState(true);
+  
+  useEffect(() => {
+    setUserList([]);
+  
+  }, [props.inn]);
 
   let url = `${document.location.origin}/mobile~registration/values?type=snils&inn=${props.inn}`;
  
 
   const getUser = () => {
    
-      setUserList([])
+      //setUserList([])
+      setLoad(true);
       let params = new Map();
       params.set('prefix','project')
       params.set('comand', 'GetRegistryValues')
       params.set('type', 'snils')
       params.set('inn',props.inn);
       
-      
       axios.get(url).then((response) => {
          
           if (Object.keys(response.data).length == 0){
             setUserList([]);
           }else{
+            setLoad(false);
             setUserList(response.data);
           }
-        });/**/
-       
+        });/* */
+     
   };
   return (
     <Grid item xs>
       <Autocomplete
-     
+        loading={loading}
+        loadingText={<CircularProgress/>}
         disableClearable
         options={users}
         getOptionLabel={(option) => option.name}
@@ -50,7 +59,7 @@ const SelectUser = (props) => {
           props.setBackInfo(newValue.snils)
         }}
         renderInput={(params) => (
-          <TextField {...params} onClick={getUser} required id="snils" label="ФИО" name="snils" error={props.error.search("snils") !== -1} />
+          <TextField {...params} onClick={ getUser} required id="snils" label="ФИО" name="snils" error={props.error.search("snils") !== -1} />
         )}
       />
     </Grid>

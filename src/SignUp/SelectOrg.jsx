@@ -3,6 +3,7 @@ import {
   Grid,
   Autocomplete,
   TextField,
+  CircularProgress
 } from "@mui/material";
 import axios from "axios";
 
@@ -15,10 +16,17 @@ const SelectOrg = (props) => {
   const [value, setValue] = useState();
   const [inputValue, setInputValue] = useState("");
   const [orgs, setOrgList] = useState([]);
+  const [loading, setLoad] = useState(true);
 
   const url = `${document.location.origin}/mobile~registration/values?type=inn`;
  
+  
+
+
+
   const getOrg = () => {
+
+      setLoad(true);
       let params = new Map();
       params.set('prefix','project')
       params.set('comand', 'GetRegistryValues')
@@ -30,7 +38,9 @@ const SelectOrg = (props) => {
           if (Object.keys(response.data).length == 0){
             setOrgList([]);
           }else{
+            setLoad(false);
             setOrgList(response.data);
+
           }
           
         });/**/
@@ -40,6 +50,8 @@ const SelectOrg = (props) => {
   return (
     <Grid item xs={12} sm={12}>
       <Autocomplete
+        loading={loading}
+        loadingText={<CircularProgress/>}
         disableClearable
         disablePortal
         fullWidth
@@ -54,7 +66,7 @@ const SelectOrg = (props) => {
         options={orgs}
         getOptionLabel={(option) => option.name}
         renderInput={(params) => (
-          <TextField {...params} required onClick={getOrg} id="inn" label="Организация" name="inn" error={props.error.search("inn") !== -1} />
+          <TextField {...params} required onClick={function(event){setOrgList([]); getOrg();}} id="inn" label="Организация" name="inn" error={props.error.search("inn") !== -1} />
         )}
       />
     </Grid>
