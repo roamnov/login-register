@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -7,8 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
+import "../Styles.ts"
 import Container from '@mui/material/Container';
 import axios from 'axios';
 //import SelectOrg from './SelectOrg';
@@ -17,8 +15,11 @@ import { Link } from 'react-router-dom';
 import SelectOrg from './SelectOrg';
 import AlertDialogSlide from './Alert';
 import { TransitionProps } from '@mui/material/transitions';
-import { Dialog, DialogContent, DialogContentText, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Slide } from '@mui/material';
+import { Dialog, DialogContent, DialogContentText, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Slide, styled } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import BigLogoAndPerosnal from "../BigLogoAndPerosnal.png"
+import { CssTextField } from '../SignIn';
+import { useStyles } from '../Styles';
 
 
 const Transition = React.forwardRef(function Transition(
@@ -31,6 +32,7 @@ const Transition = React.forwardRef(function Transition(
 });
 
 export default function SignUp() {
+    const styles = useStyles();
     var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
     document.title = "Регистрация";
     const [open, setOpen] = React.useState(false);
@@ -54,8 +56,6 @@ export default function SignUp() {
       event.preventDefault();
     };
     
-
-
     const handleClose = () => {
       setOpen(false)
       if(status === true){window.history.back();}
@@ -109,8 +109,6 @@ export default function SignUp() {
                         setOpen(true)
                         
                       })
-          
-          
         } /**/
     };
 
@@ -121,6 +119,7 @@ export default function SignUp() {
 
     const AllowData = (input:any)=>{ return input['checked'] }
 
+    
 
   return (
     
@@ -134,23 +133,18 @@ export default function SignUp() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-          Регистрация
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <img src={BigLogoAndPerosnal} style={{width:"45%"}} />
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 0.8 }}>
             <Grid container spacing={2} justifyContent="center">
               <Grid item xs={12} sm={12}>
-                <TextField required fullWidth  id="login" label="Логин" name="login"   error={error.search("login") !== -1} />
+                <CssTextField required fullWidth  id="login" label="Логин" name="login"   error={error.search("login") !== -1} />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <TextField value={email} onChange={handleChange} required fullWidth  id="email" label="E-mail (Электронная почта для подтверждения регистрации)" name="email" error={error.search("email") !== -1} />
+                <CssTextField value={email} onChange={handleChange} required fullWidth  id="email" label="E-mail (Электронная почта для подтверждения регистрации)" name="email" error={error.search("email") !== -1} />
               </Grid>
               <Grid item xs={12} sm={12}>
-              <FormControl  fullWidth variant="outlined">
-             <InputLabel htmlFor="password">Пароль</InputLabel>
+              <FormControl  fullWidth variant="outlined" sx={{"& .MuiOutlinedInput-root": { "&.Mui-focused fieldset": {   borderColor: "#3c5b77",  }}}}>
+             <InputLabel required htmlFor="password" sx={{"&.Mui-focused": {   color: "#3c5b77" }}}>Пароль</InputLabel>
                 <OutlinedInput  type={showpassword ? 'text' : 'password'}  required fullWidth id="password" label="Пароль" name="password"  error={error.search("password") !== -1}
                     endAdornment={
                       <InputAdornment position="end">
@@ -179,6 +173,7 @@ export default function SignUp() {
             </Grid>
             <AlertDialogSlide setStatus={setStatus} message={message} status={status} open={open}/>
             <Button
+              style={{backgroundColor:"#3c5b77"}}
               type="submit"
               fullWidth
               variant="contained"
@@ -188,8 +183,8 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link to={"/"}>
-                  Уже есть аккаунт? Войти
+                <Link to={"/"} className={styles.link}>
+                  Уже есть учётная запись? Войти
                 </Link>
               </Grid>
             </Grid>
@@ -214,6 +209,13 @@ export default function SignUp() {
   );
 }
 /*
+
+<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+          Регистрация
+          </Typography>
 
 if (values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
     errors.email = 'Invalid email address'

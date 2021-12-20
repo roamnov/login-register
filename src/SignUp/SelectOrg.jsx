@@ -3,8 +3,10 @@ import {
   Grid,
   Autocomplete,
   TextField,
-  CircularProgress
+  CircularProgress,
+  styled
 } from "@mui/material";
+import { CssTextField } from '../SignIn';
 import axios from "axios";
 
 
@@ -20,9 +22,6 @@ const SelectOrg = (props) => {
 
   const url = `${document.location.origin}/mobile~registration/values?type=inn`;
  
-  
-
-
 
   const getOrg = () => {
 
@@ -66,7 +65,7 @@ const SelectOrg = (props) => {
         options={orgs}
         getOptionLabel={(option) => option.name}
         renderInput={(params) => (
-          <TextField {...params} required onClick={function(event){setOrgList([]); getOrg();}} id="inn" label="Организация" name="inn" error={props.error.search("inn") !== -1} />
+          <CssTextField {...params} required onClick={function(event){setOrgList([]); getOrg();}} id="inn" label="Организация" name="inn" error={props.error.search("inn") !== -1} sx={{}} />
         )}
       />
     </Grid>

@@ -7,6 +7,7 @@ import {
   Skeleton
 } from "@mui/material";
 import axios from "axios";
+import { CssTextField } from '../SignIn';
 
 
 const SelectUser = (props) => {
@@ -48,7 +49,7 @@ const SelectUser = (props) => {
     <Grid item xs>
       <Autocomplete
         loading={loading}
-        loadingText={<CircularProgress/>}
+        loadingText={props.inn== undefined?"Необходимо выбрать организацию":<CircularProgress/>}
         disableClearable
         options={users}
         getOptionLabel={(option) => option.name}
@@ -59,7 +60,7 @@ const SelectUser = (props) => {
           props.setBackInfo(newValue.snils)
         }}
         renderInput={(params) => (
-          <TextField {...params} onClick={ getUser} required id="snils" label="ФИО" name="snils" error={props.error.search("snils") !== -1} />
+          <CssTextField {...params} onClick={ getUser} required id="snils" label="ФИО" name="snils" error={props.error.search("snils") !== -1} />
         )}
       />
     </Grid>
