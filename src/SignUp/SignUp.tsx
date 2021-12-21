@@ -166,7 +166,7 @@ export default function SignUp() {
               <Grid item xs={12}>
                 <FormControlLabel
                   style={{ color: error.search("checkbox") !== -1?"red":""}}
-                  control={<Checkbox style={{ color: error.search("checkbox") !== -1?"red":""}}  value="allowPersonalData" color="primary" />}
+                  control={<Checkbox style={{ color: error.search("checkbox") !== -1?"red":"#07579f"}}  value="allowPersonalData" color="primary" />}
                   label="Я согласен на обработку персональных данных(настоящим подтверждаю, что в случае регистрации мною третьих лиц, предоставляю пресональные данные с их согласия)"
                 />
               </Grid>
