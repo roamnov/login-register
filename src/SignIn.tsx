@@ -66,9 +66,9 @@ export default function SignIn() {
         if(response.data['status'] !== undefined &&response.data['status']!== "ok" ){
           setError(response.data['status'])
          
-        }
-        else{
-          let href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
+        }else{
+          // let href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
+          let href = response.data['browser'] + "?"+ `licGuid=${response.data['licguid']},stimWebSrv=${response.data['stimwebsrv']},from=${window.location.href}`
           window.location.href = href;
         }
         
