@@ -38,7 +38,7 @@ export default function SignIn() {
   const styles = useStyles();
   document.title = "Вход";
   const [error, setError] = React.useState<string | null>("");
-  let url= `${document.location.origin}/mobile~account`;
+  let url= `${document.location.origin}/mobile~account?single=1`;
   const [showpassword, setShowPassword] = React.useState(false);
   
 
@@ -68,7 +68,7 @@ export default function SignIn() {
          
         }else{
           // let href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
-          let href = response.data['browser'] + "?"+ `licGuid=${response.data['licguid']},stimWebSrv=${response.data['stimwebsrv']},from=${window.location.href}`
+          let href = response.data['browser'] + "?"+ `Guid=${response.data['licguid']},stimWebSrv=${response.data['stimwebsrv']},from=${window.location.href.replaceAll("/","@")}`
           window.location.href = href;
         }
         
