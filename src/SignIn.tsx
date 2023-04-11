@@ -68,7 +68,7 @@ export default function SignIn() {
          
         }else{
           // let href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
-          let href = response.data['browser'] + "?"+ `Guid=${response.data['licguid']},stimWebSrv=${response.data['stimwebsrv']},from=${window.location.href.replaceAll("/","@")}`
+          let href = response.data['browser'] + "?"+ `Guid=${response.data['licguid']}&stimWebSrv=${response.data['stimwebsrv']}&from=${window.location.href.replaceAll("/","@")}`
           window.location.href = href;
         }
         
