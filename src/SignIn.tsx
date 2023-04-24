@@ -125,7 +125,7 @@ export default function SignIn() {
             </FormHelperText>
             </Grid>
             <Button
-              style={{backgroundColor:"#3c5b77"}}
+              style={{backgroundColor:"#3c5b77", textTransform:"none"}}
               type="submit"
               fullWidth
               variant="contained"

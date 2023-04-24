@@ -167,13 +167,13 @@ export default function SignUp() {
                 <FormControlLabel
                   style={{ color: error.search("checkbox") !== -1?"red":""}}
                   control={<Checkbox style={{ color: error.search("checkbox") !== -1?"red":"#07579f"}}  value="allowPersonalData" color="primary" />}
-                  label="Я согласен на обработку персональных данных(настоящим подтверждаю, что в случае регистрации мною третьих лиц, предоставляю пресональные данные с их согласия)"
+                  label="Я согласен на обработку персональных данных (настоящим подтверждаю, что в случае регистрации мною третьих лиц, предоставляю персональные данные с их согласия)"
                 />
               </Grid>
             </Grid>
             <AlertDialogSlide setStatus={setStatus} message={message} status={status} open={open}/>
             <Button
-              style={{backgroundColor:"#3c5b77"}}
+              style={{backgroundColor:"#3c5b77", textTransform:"none"}}
               type="submit"
               fullWidth
               variant="contained"
