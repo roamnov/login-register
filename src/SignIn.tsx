@@ -30,15 +30,20 @@ export const CssTextField = styled(TextField)({
     },
   },
 });
-
+declare global {
+  interface Window {
+    BASE_LK?: any;
+  }
+}
 
 
 
 export default function SignIn() {
+  
   const styles = useStyles();
   document.title = "Вход";
   const [error, setError] = React.useState<string | null>("");
-  let url= `${document.location.origin}/mobile~account?single=1`;
+  let url= `${document.location.origin}/mobile~account?single=${window.BASE_LK}`;
   const [showpassword, setShowPassword] = React.useState(false);
   
 
@@ -67,8 +72,12 @@ export default function SignIn() {
           setError(response.data['status'])
          
         }else{
+          let href
+          if(window.BASE_LK === "1")href = response.data['browser'] + "?"+ `Guid=${response.data['licguid']}&stimWebSrv=${response.data['stimwebsrv']}&from=${window.location.href.replaceAll("/","@")}`
+          else href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
           // let href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
-          let href = response.data['browser'] + "?"+ `Guid=${response.data['licguid']}&stimWebSrv=${response.data['stimwebsrv']}&from=${window.location.href.replaceAll("/","@")}`
+          // let href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
+          
           window.location.href = href;
         }
         
