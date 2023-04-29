@@ -24,7 +24,7 @@ export const CssTextField = styled(TextField)({
 
 
   '& .MuiOutlinedInput-root': {
-    
+
     '&.Mui-focused fieldset': {
       borderColor: '#3c5b77',
     },
@@ -32,20 +32,21 @@ export const CssTextField = styled(TextField)({
 });
 declare global {
   interface Window {
-    BASE_LK?: any;
+    signIn_url?: any,
+    BASE_LK?:any;
   }
 }
 
 
 
 export default function SignIn() {
-  
+
   const styles = useStyles();
   document.title = "Вход";
   const [error, setError] = React.useState<string | null>("");
-  let url= `${document.location.origin}/mobile~account?single=${window.BASE_LK}`;
+  let url= window.signIn_url;
   const [showpassword, setShowPassword] = React.useState(false);
-  
+
 
   const handleClickShowPassword = () => {
     setShowPassword(!showpassword)
@@ -54,7 +55,7 @@ export default function SignIn() {
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
-  
+
 
 
 
@@ -65,25 +66,25 @@ export default function SignIn() {
       UserName: data.get('login'),
       Password: data.get('password'),
     };
-    
+
     axios.post(url,JSON.stringify(LoginData)).then((response)=>{
       console.log(response.data)
         if(response.data['status'] !== undefined &&response.data['status']!== "ok" ){
           setError(response.data['status'])
-         
+
         }else{
           let href
           if(window.BASE_LK === "1")href = response.data['browser'] + "?"+ `Guid=${response.data['licguid']}&stimWebSrv=${response.data['stimwebsrv']}&from=${window.location.href.replaceAll("/","@")}`
           else href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
           // let href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
           // let href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
-          
+
           window.location.href = href;
         }
-        
+
       }
     )};
-  
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -97,8 +98,8 @@ export default function SignIn() {
             alignItems: 'center',
           }}
         >
-          
-          
+
+
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <img src={BigLogoAndPerosnal} style={{ marginLeft:"29%", width:"45%"}}/>
             <CssTextField  margin="normal"
@@ -113,7 +114,7 @@ export default function SignIn() {
               />
              <FormControl  fullWidth variant="outlined" sx={{"& .MuiOutlinedInput-root": { "&.Mui-focused fieldset": {   borderColor: "#3c5b77",  }}}} >
              <InputLabel required htmlFor="password" sx={{"&.Mui-focused": {   color: "#3c5b77" }}}>Пароль</InputLabel>
-              <OutlinedInput   autoComplete="current-password"  type={showpassword ? 'text' : 'password'}   fullWidth id="password" label="password" name="password" 
+              <OutlinedInput   autoComplete="current-password"  type={showpassword ? 'text' : 'password'}   fullWidth id="password" label="password" name="password"
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
@@ -143,18 +144,18 @@ export default function SignIn() {
               Войти
             </Button>
             <Grid container justifyContent="center" alignItems="center">
-              
+
               <Grid item>
-            
+
                 <Link className={styles.link} to={"/signup"} >
                   {"Нет учётной записи? Зарегистрируйтесь"}
                 </Link>
-   
+
               </Grid>
             </Grid>
           </Box>
         </Box>
-        
+
       </Container>
     </ThemeProvider>
   );
