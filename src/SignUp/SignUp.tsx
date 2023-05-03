@@ -65,7 +65,7 @@ export default function SignUp() {
   const [error, setError] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [captcha, setCaptcha] = React.useState("");
-  const [DataCaptcha, setDataCapctha] = React.useState<any>({ passed: false });
+  const [DataCaptcha, setDataCapctha] = React.useState<any>({ passed: false, color:"" });
   const [showpassword, setShowPassword] = React.useState(false);
 
   const url = window.signUP_url;
@@ -77,24 +77,30 @@ export default function SignUp() {
     getCaptha();
   }, []);
 
-  const getCaptha = () => {
+  const getCaptha = (color?:any) => {
     axios.get(`${document.location.origin}/mobile~captcha`).then((res) => {
+      // console.log(DataCaptcha)
+      setCaptcha("")
       setDataCapctha({
         img: "data:image/gif;base64," + res.data.RCDATA,
         ident: res.data.ident,
         passed: false,
+        color:color?color:""
       });
     });
   };
 
   const sendCaptha = () => {
+    // console.log(DataCaptcha)
     axios
       .get(
         `${document.location.origin}/mobile~captcha?ident=${DataCaptcha.ident}&check=${captcha}`
       )
       .then((res) => {
-        if (res.data.result) {
-          setDataCapctha({ ...DataCaptcha, passed: true });
+        if (res.data.result === "1") {
+          setDataCapctha({ ...DataCaptcha, passed: true, color:"Успешно." });
+        }else{
+          getCaptha("Повторите ещё раз.")
         }
       });
   };
@@ -206,7 +212,7 @@ export default function SignUp() {
           alignItems="center"
         >
           <Tooltip title={"Обновить текст на картинке"} placement="left">
-            <IconButton onClick={getCaptha}>
+            <IconButton onClick={()=>{getCaptha()}}>
               <RefreshIcon fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -218,9 +224,12 @@ export default function SignUp() {
           /> */}
             <CssTextField
               size={"small"}
-              value={email}
-              sx={{ ".MuiInputLabel-outlined": { fontSize: "13px" } }}
+              id="captha"
+              name="captha"
+              value={captcha}
+              sx={{ ".MuiInputLabel-outlined": { fontSize: "12px" } }}
               label="Введите текст с картинки"
+              helperText={DataCaptcha.color}
               onChange={(e) => {
                 setCaptcha(e.target.value);
               }}
@@ -337,6 +346,7 @@ export default function SignUp() {
           noValidate
           onSubmit={handleSubmit}
           sx={{ mt: 0.8 }}
+          autoComplete="off"
         >
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={12} sm={12}>
@@ -438,7 +448,7 @@ export default function SignUp() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            // disabled={!DataCaptcha.bool}
+            disabled={!DataCaptcha.passed}
           >
             Зарегистрироваться
           </Button>
