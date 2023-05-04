@@ -20,7 +20,7 @@ const SelectOrg = (props) => {
   const [orgs, setOrgList] = useState([]);
   const [loading, setLoad] = useState(true);
 
-  const url = `${document.location.origin}/mobile~registration/values?type=inn`;
+  const url = window.ORG_url;
  
 
   const getOrg = () => {

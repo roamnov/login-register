@@ -10,6 +10,7 @@ import axios from "axios";
 import { CssTextField } from '../SignIn';
 
 
+
 const SelectUser = (props) => {
  
   const [value, setValue] = useState();
@@ -21,7 +22,8 @@ const SelectUser = (props) => {
   
   }, [props.inn]);
 
-  let url = `${document.location.origin}/mobile~registration/values?type=snils&inn=${props.inn}`;
+  let url = window.FIO_url
+  // let url = `${document.location.origin}/mobile~registration/values?type=snils&inn=${props.inn}`;
  
 
   const getUser = () => {
@@ -34,7 +36,7 @@ const SelectUser = (props) => {
       params.set('type', 'snils')
       params.set('inn',props.inn);
       
-      axios.get(url).then((response) => {
+      axios.get(url + `&inn=${props.inn}`).then((response) => {
          
           if (Object.keys(response.data).length == 0){
             setUserList([]);

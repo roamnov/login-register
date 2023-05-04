@@ -46,7 +46,8 @@ const Transition = React.forwardRef(function Transition(
 
 declare global {
   interface Window {
-    signUP_url?: any;
+    signUP_url?: any,
+    BASE_CAPTCHA?:any
   }
 }
 
@@ -65,7 +66,7 @@ export default function SignUp() {
   const [error, setError] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [captcha, setCaptcha] = React.useState("");
-  const [DataCaptcha, setDataCapctha] = React.useState<any>({ passed: false, color:"" });
+  const [DataCaptcha, setDataCapctha] = React.useState<any>({ passed: window.BASE_CAPTCHA === "0"?true:false, color:"" });
   const [showpassword, setShowPassword] = React.useState(false);
 
   const url = window.signUP_url;
@@ -74,7 +75,7 @@ export default function SignUp() {
     setShowPassword(!showpassword);
   };
   React.useEffect(() => {
-    getCaptha();
+    if(window.BASE_CAPTCHA === "1")getCaptha();
   }, []);
 
   const getCaptha = (color?:any) => {
@@ -364,7 +365,7 @@ export default function SignUp() {
                 label="Я согласен на обработку персональных данных (настоящим подтверждаю, что в случае регистрации мною третьих лиц, предоставляю персональные данные с их согласия)"
               />
             </Grid>
-            {second}
+            {window.BASE_CAPTCHA=== "0"?<></>:second}
           </Grid>
           <AlertDialogSlide
             setStatus={setStatus}
