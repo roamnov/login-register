@@ -6,15 +6,20 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { TransitionProps } from "@mui/material/transitions";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import {
+  Dialog,
+  DialogContent,
+  DialogContentText,
   FormControl,
   FormHelperText,
   IconButton,
   InputAdornment,
   InputLabel,
   OutlinedInput,
+  Slide,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import BigLogoAndPerosnal from "./BigLogoAndPerosnal.png";
@@ -23,6 +28,15 @@ import { useStyles } from "./Styles";
 import Grow from "@mui/material/Grow";
 
 const theme = createTheme();
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export const CssTextField = styled(TextField)({
   "& label.Mui-focused": {
@@ -46,9 +60,15 @@ declare global {
 export default function SignIn() {
   const styles = useStyles();
   document.title = "Вход";
+  var pattern = new RegExp(
+    /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
+  );
   const [error, setError] = React.useState<string | null>("");
   let url = window.signIn_url;
   const [showpassword, setShowPassword] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [status, setStatus] = React.useState(false);
+  const [message, setMessage] = React.useState<any>("");
 
   const handleClickShowPassword = () => {
     setShowPassword(!showpassword);
@@ -58,6 +78,29 @@ export default function SignIn() {
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+
+  };
+
+  const handlOpenDialog = () => {
+    setMessage(
+      <CssTextField
+      margin="normal"
+      required
+      fullWidth
+      id="login"
+      label="Логин"
+      name="login"
+      autoComplete="login"
+      autoFocus
+      sx={{ mt: 0 }}
+    />
+    )
+    setOpen(true);
+
   };
 
   const RestorePassword = (
@@ -72,7 +115,7 @@ export default function SignIn() {
         sx={{ pt: 1 }}
       >
         <Grid item>
-          <Link className={styles.link} to={"/restorepassword"}>
+          <Link className={styles.link} to={""} onClick={handlOpenDialog}>
             {"Восстановить пароль"}
           </Link>
         </Grid>
@@ -221,6 +264,19 @@ export default function SignIn() {
             </Grow>
           </Box>
         </Box>
+        <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            {message}
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
       </Container>
     </ThemeProvider>
   );

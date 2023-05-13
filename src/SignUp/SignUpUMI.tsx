@@ -28,13 +28,12 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import BigLogoAndPerosnal from "../BigLogoAndPerosnal.png";
-import capha from "../caphatest.jpg";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { CssTextField } from "../SignIn";
 import { useStyles } from "../Styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { ruRU } from '@mui/x-date-pickers/locales';
+import { ruRU } from "@mui/x-date-pickers/locales";
 import { DateField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 
@@ -66,7 +65,9 @@ export default function SignUpUMI() {
   const [message, setMessage] = React.useState("");
   const [error, setError] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [data, setData] = React.useState(dayjs(`${CurrentDate.getFullYear()}-01-01`));
+  const [ContractDate, setContractDate] = React.useState(
+    dayjs(`${CurrentDate.getFullYear()}-01-01`)
+  );
   const [captcha, setCaptcha] = React.useState("");
   const [DataCaptcha, setDataCapctha] = React.useState<any>({
     passed: window.BASE_CAPTCHA === "0" ? true : false,
@@ -245,7 +246,7 @@ export default function SignUpUMI() {
       FirstName: data.get("FirstName"),
       MiddleName: data.get("MiddleName"),
       ContractNumber: data.get("ContractNumber"),
-      ContractDate: data.get("ContractDate"),
+      ContractDate: ContractDate,
     };
 
     if (!checked) {
@@ -263,7 +264,6 @@ export default function SignUpUMI() {
         setError(errors);
       }
     }
-    console.log(errors);
     if (errors === "") {
       // services/RegistrationLK/create
       axios.post(url, JSON.stringify(SignUpData)).then((response) => {
@@ -284,9 +284,6 @@ export default function SignUpUMI() {
     setEmail(event.target.value);
   };
 
-  const AllowData = (input: any) => {
-    return input["checked"];
-  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -410,6 +407,9 @@ export default function SignUpUMI() {
                   name="INN"
                   error={error.search("INN") !== -1}
                   onChange={unableError}
+                  helperText={
+                    error.search("INN") !== -1 ? "Заполните поле" : ""
+                  }
                 />
               </Grow>
             </Grid>
@@ -437,6 +437,9 @@ export default function SignUpUMI() {
                   name="LastName"
                   error={error.search("LastName") !== -1}
                   onChange={unableError}
+                  helperText={
+                    error.search("LastName") !== -1 ? "Заполните поле" : ""
+                  }
                 />
               </Grow>
             </Grid>
@@ -454,6 +457,9 @@ export default function SignUpUMI() {
                   name="FirstName"
                   error={error.search("FirstName") !== -1}
                   onChange={unableError}
+                  helperText={
+                    error.search("FirstName") !== -1 ? "Заполните поле" : ""
+                  }
                 />
               </Grow>
             </Grid>
@@ -471,6 +477,9 @@ export default function SignUpUMI() {
                   name="MiddleName"
                   error={error.search("MiddleName") !== -1}
                   onChange={unableError}
+                  helperText={
+                    error.search("MiddleName") !== -1 ? "Заполните поле" : ""
+                  }
                 />
               </Grow>
             </Grid>
@@ -505,12 +514,29 @@ export default function SignUpUMI() {
                       error={error.search("ContractDate") !== -1}
                       onChange={unableError}
                     /> */}
-                    <LocalizationProvider dateAdapter={AdapterDayjs}  adapterLocale={"ru"} localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}>
+                    <LocalizationProvider
+                      dateAdapter={AdapterDayjs}
+                      adapterLocale={"ru"}
+                      localeText={
+                        ruRU.components.MuiLocalizationProvider.defaultProps
+                          .localeText
+                      }
+                    >
                       <DateField
-                        value={data}
-                        onChange={(newValue: any) => setData(newValue)}
+                        value={ContractDate}
+                        onChange={(newValue: any) => setContractDate(newValue)}
                         format="DD/MM/YYYY"
-                        
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#3c5b77",
+                          },
+
+                          "& .MuiOutlinedInput-root": {
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#3c5b77",
+                            },
+                          },
+                        }}
                       />
                     </LocalizationProvider>
                   </Grid>
