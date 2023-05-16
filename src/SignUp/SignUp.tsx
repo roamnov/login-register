@@ -79,7 +79,7 @@ export default function SignUp() {
 
   const getCaptha = (color?:any) => {
     axios.get(`${document.location.origin}/mobile~captcha`).then((res) => {
-      // console.log(DataCaptcha)
+      // 
       setCaptcha("")
       setDataCapctha({
         img: "data:image/gif;base64," + res.data.RCDATA,
@@ -91,7 +91,7 @@ export default function SignUp() {
   };
 
   const sendCaptha = () => {
-    // console.log(DataCaptcha)
+    // 
     axios
       .get(
         `${document.location.origin}/mobile~captcha?ident=${DataCaptcha.ident}&check=${captcha}`
@@ -238,7 +238,7 @@ export default function SignUp() {
 
     if (errors === "") {
       axios.post(url, JSON.stringify(SignUpData)).then((response) => {
-        //console.log(response)
+        //
         if (response.data["status"] === "ok") {
           setStatus(true);
           setMessage(response.data["message"]);

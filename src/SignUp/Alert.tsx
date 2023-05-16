@@ -27,7 +27,7 @@ export default function AlertDialogSlide(props: Alert ) {
   const handleClose = () => {
     setOpen(false)
     
-    console.log(true)
+    
     if(props.status === true){window.history.back();}
     
   };

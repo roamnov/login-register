@@ -87,7 +87,7 @@ export default function SignUpUMI() {
 
   const getCaptha = (color?: any) => {
     axios.get(`${document.location.origin}/mobile~captcha`).then((res) => {
-      // console.log(DataCaptcha)
+      // 
       setCaptcha("");
       setDataCapctha({
         img: "data:image/gif;base64," + res.data.RCDATA,
@@ -99,7 +99,7 @@ export default function SignUpUMI() {
   };
 
   const sendCaptha = () => {
-    // console.log(DataCaptcha)
+    // 
     axios
       .get(
         `${document.location.origin}/mobile~captcha?ident=${DataCaptcha.ident}&check=${captcha}`
@@ -267,7 +267,7 @@ export default function SignUpUMI() {
     if (errors === "") {
       // services/RegistrationLK/create
       axios.post(url, JSON.stringify(SignUpData)).then((response) => {
-        //console.log(response)
+        //
         if (response.data["status"] === "ok") {
           setStatus(true);
           setMessage(response.data["message"]);
@@ -337,7 +337,7 @@ export default function SignUpUMI() {
                   required
                   fullWidth
                   id="email"
-                  label="E-mail (Электронная почта для подтверждения регистрации)"
+                  label="E-mail"
                   name="email"
                   error={error.search("email") !== -1}
                   helperText={

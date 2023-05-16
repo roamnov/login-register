@@ -132,7 +132,7 @@ export default function SignIn() {
     };
 
     axios.post(url, JSON.stringify(LoginData)).then((response) => {
-      console.log(response.data);
+      
       if (
         response.data["status"] !== undefined &&
         response.data["status"] !== "ok"
