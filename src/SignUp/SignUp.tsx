@@ -45,8 +45,8 @@ const Transition = React.forwardRef(function Transition(
 
 declare global {
   interface Window {
-    signUP_url?: any,
-    BASE_CAPTCHA?:any
+    signUP_url?: any;
+    BASE_CAPTCHA?: any;
   }
 }
 
@@ -59,14 +59,18 @@ export default function SignUp() {
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = React.useState(false);
   const [message, setMessage] = React.useState("");
-  const [snils, setSnils] = React.useState();
+  const [snils, setSnils] = React.useState("");
   const [inn, setInn] = React.useState();
-  const [fio, setFio] = React.useState("");
+  const [snilsError, setSnilsError] = React.useState("");
   const [error, setError] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [captcha, setCaptcha] = React.useState("");
-  const [DataCaptcha, setDataCapctha] = React.useState<any>({ passed: window.BASE_CAPTCHA === "0"?true:false, color:"" });
+  const [DataCaptcha, setDataCapctha] = React.useState<any>({
+    passed: window.BASE_CAPTCHA === "0" ? true : false,
+    color: "",
+  });
   const [showpassword, setShowPassword] = React.useState(false);
+  const [checked, setChecked] = React.useState(false);
 
   const url = window.signUP_url;
 
@@ -74,33 +78,40 @@ export default function SignUp() {
     setShowPassword(!showpassword);
   };
   React.useEffect(() => {
-    if(window.BASE_CAPTCHA === "1")getCaptha();
+    if (window.BASE_CAPTCHA === "1") getCaptha();
   }, []);
 
-  const getCaptha = (color?:any) => {
+  const getCaptha = (color?: any) => {
     axios.get(`${document.location.origin}/mobile~captcha`).then((res) => {
-      // 
-      setCaptcha("")
+      //
+      setCaptcha("");
       setDataCapctha({
         img: "data:image/gif;base64," + res.data.RCDATA,
         ident: res.data.ident,
         passed: false,
-        color:color?color:""
+        color: color ? color : "",
       });
     });
   };
 
+  const handleChangeCheckBox = (event: any) => {
+    setChecked(event.target.checked);
+    if (error.search(event.target.id) !== -1) {
+      setError(error.replace(event.target.id, ""));
+    }
+  };
+
   const sendCaptha = () => {
-    // 
+    //
     axios
       .get(
         `${document.location.origin}/mobile~captcha?ident=${DataCaptcha.ident}&check=${captcha}`
       )
       .then((res) => {
         if (res.data.result === "1") {
-          setDataCapctha({ ...DataCaptcha, passed: true, color:"Успешно." });
-        }else{
-          getCaptha("Повторите ещё раз.")
+          setDataCapctha({ ...DataCaptcha, passed: true, color: "Успешно." });
+        } else {
+          getCaptha("Повторите ещё раз.");
         }
       });
   };
@@ -142,7 +153,11 @@ export default function SignUp() {
           alignItems="center"
         >
           <Tooltip title={"Обновить текст на картинке"} placement="left">
-            <IconButton onClick={()=>{getCaptha()}}>
+            <IconButton
+              onClick={() => {
+                getCaptha();
+              }}
+            >
               <RefreshIcon fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -220,7 +235,7 @@ export default function SignUp() {
       snils: snils,
     };
 
-    if (checkbox === false) {
+    if (!checked) {
       errors += "checkbox";
       setError(errors);
     }
@@ -254,6 +269,54 @@ export default function SignUp() {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
+
+  const handleChangeSNILS = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let clearSnils:any = event.target.value
+    clearSnils = clearSnils.replaceAll("-","")
+    clearSnils = clearSnils.replaceAll(" ","")
+    setSnils(clearSnils);
+    console.log(clearSnils)
+    if(validateSnils(clearSnils)){
+      setSnilsError("");
+    }
+  };
+
+  function validateSnils(snils: any) {
+    var result = false;
+    if (typeof snils === "number") {
+      snils = snils.toString();
+    } else if (typeof snils !== "string") {
+      snils = "";
+    }
+    if (!snils.length) {
+      setSnilsError("СНИЛС пуст");
+    } else if (/[^0-9]/.test(snils)) {
+      setSnilsError("СНИЛС может состоять только из цифр");
+    } else if (snils.length !== 11) {
+      setSnilsError("СНИЛС может состоять только из 11 цифр");
+    } else {
+      let sum: any = 0;
+      for (var i = 0; i < 9; i++) {
+        sum += parseInt(snils[i]) * (9 - i);
+      }
+      var checkDigit = 0;
+      if (sum < 100) {
+        checkDigit = sum;
+      } else if (sum > 101) {
+        checkDigit = sum % 101;
+        if (checkDigit === 100) {
+          checkDigit = 0;
+        }
+      }
+      if (checkDigit === parseInt(snils.slice(-2))) {
+        result = true;
+      } else {
+        setSnilsError("Неправильное контрольное число");
+      }
+    }
+
+    return result;
+  }
 
   const AllowData = (input: any) => {
     return input["checked"];
@@ -342,12 +405,19 @@ export default function SignUp() {
               </FormControl>
             </Grid>
             <SelectOrg error={error} setBackInfo={setInn} />
-            <SelectUser
-              error={error}
-              inn={inn}
-              fio={fio}
-              setBackInfo={setSnils}
-            />
+            <Grid item xs={12} sm={12}>
+              <CssTextField
+                value={snils}
+                onChange={handleChangeSNILS}
+                required
+                fullWidth
+                id="snils"
+                label="СНИЛС"
+                name="snils"
+                error={error.search("snils") !== -1}
+                helperText={snilsError}
+              />
+            </Grid>
             <Grid item xs={12}>
               <FormControlLabel
                 style={{ color: error.search("checkbox") !== -1 ? "red" : "" }}
@@ -357,14 +427,15 @@ export default function SignUp() {
                       color:
                         error.search("checkbox") !== -1 ? "red" : "#07579f",
                     }}
-                    value="allowPersonalData"
-                    color="primary"
+                    checked={checked}
+                    id="checkbox"
+                    onChange={handleChangeCheckBox}
                   />
                 }
                 label="Я согласен на обработку персональных данных (настоящим подтверждаю, что в случае регистрации мною третьих лиц, предоставляю персональные данные с их согласия)"
               />
             </Grid>
-            {window.BASE_CAPTCHA=== "0"?<></>:second}
+            {window.BASE_CAPTCHA === "0" ? <></> : second}
           </Grid>
           <AlertDialogSlide
             setStatus={setStatus}

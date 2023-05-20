@@ -10,14 +10,14 @@ function App() {
   const [piNcode, setPinCode] = useState();
   return (
     <div className="App">
-      
+
         <Routes>
-          <Route  path='/signup' element= {<SignUpUMI/>}/>
-          {/* <Route  path='/signup' element= {<SignUp/>}/> */}
+          {/* <Route  path='/signup' element= {<SignUpUMI/>}/> */}
+          <Route  path='/signup' element= {<SignUp/>}/>
           <Route path='/restorepassword' element={<RestorePassword/>}/>
           <Route path='' element={<SignIn/>}/>
         </Routes>
-      
+
     </div>
   );
 }

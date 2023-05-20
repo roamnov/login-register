@@ -132,7 +132,7 @@ export default function SignIn() {
     };
 
     axios.post(url, JSON.stringify(LoginData)).then((response) => {
-      
+
       if (
         response.data["status"] !== undefined &&
         response.data["status"] !== "ok"
@@ -241,7 +241,7 @@ export default function SignIn() {
                 </FormHelperText>
               </Grid>
             </Grow>
-            {RestorePassword}
+            {/* {RestorePassword} */}
             <Grow in={true} timeout={380} style={{ transformOrigin: '0 0 0' }}>
               <Button
                 style={{ backgroundColor: "#3c5b77", textTransform: "none" }}
