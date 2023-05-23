@@ -5,7 +5,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import "../Styles.ts";
+import Input from "@mui/material/Input";
 import Container from "@mui/material/Container";
 import axios from "axios";
 //import SelectOrg from './SelectOrg';
@@ -33,6 +33,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import { CssTextField } from "../SignIn";
 import { useStyles } from "../Styles";
 import Grow from "@mui/material/Grow";
+import { IMaskInput } from "react-imask";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -50,8 +51,36 @@ declare global {
   }
 }
 
+interface CustomProps {
+  onChange: (event: { target: { name: string; value: string } }) => void;
+  name: string;
+}
+
+const TextMaskCustom = React.forwardRef<HTMLElement, CustomProps>(
+  function TextMaskCustom(props, ref) {
+    const { onChange, ...other } = props;
+    return (
+      <IMaskInput
+        {...other}
+        mask="000-000-000-00"
+        definitions={{
+          "#": /[1-9]/,
+        }}
+        inputRef={ref}
+        onAccept={(value: any) =>
+          onChange({ target: { name: props.name, value } })
+        }
+        overwrite
+      />
+    );
+  }
+);
+
 export default function SignUp() {
   const styles = useStyles();
+  const SnilsMask = (snilsValue: string) => {
+    return snilsValue.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/, "$1-$2-$3-$4");
+  };
   var pattern = new RegExp(
     /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
   );
@@ -59,7 +88,7 @@ export default function SignUp() {
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = React.useState(false);
   const [message, setMessage] = React.useState("");
-  const [snils, setSnils] = React.useState("");
+  const [snils, setSnils] = React.useState("000-000-000-00");
   const [inn, setInn] = React.useState();
   const [snilsError, setSnilsError] = React.useState("");
   const [error, setError] = React.useState("");
@@ -271,12 +300,18 @@ export default function SignUp() {
   };
 
   const handleChangeSNILS = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let clearSnils:any = event.target.value
-    clearSnils = clearSnils.replaceAll("-","")
-    clearSnils = clearSnils.replaceAll(" ","")
-    setSnils(clearSnils);
-    console.log(clearSnils)
-    if(validateSnils(clearSnils)){
+    let clearSnils: any = event.target.value;
+    clearSnils = clearSnils.replaceAll("-", "");
+    clearSnils = clearSnils.replaceAll(" ", "");
+    setSnils(SnilsMask(event.target.value));
+    // 188 389 195 47
+    var value = "18838919547";
+    var formatted = value.replace(
+      /^(\d{3})(\d{3})(\d{3})(\d{2}).*/,
+      "$1-$2-$3-$4"
+    );
+    console.log(clearSnils, formatted);
+    if (validateSnils(clearSnils)) {
       setSnilsError("");
     }
   };
@@ -417,6 +452,30 @@ export default function SignUp() {
                 error={error.search("snils") !== -1}
                 helperText={snilsError}
               />
+              <FormControl
+                fullWidth
+                variant="outlined"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "&.Mui-focused fieldset": { borderColor: "#3c5b77" },
+                  },
+                }}
+              >
+                <InputLabel htmlFor="formatted-text-mask-input">
+                  СНИЛС
+                </InputLabel>
+                <OutlinedInput
+                  required
+                  fullWidth
+                  value={snils}
+                  onChange={handleChangeSNILS}
+                  name="snils"
+                  id="snils"
+                  error={error.search("snils") !== -1}
+                  inputComponent={TextMaskCustom as any}
+                  
+                />
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
