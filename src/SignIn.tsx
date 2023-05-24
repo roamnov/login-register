@@ -11,8 +11,10 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   Dialog,
+  DialogActions,
   DialogContent,
   DialogContentText,
+  DialogTitle,
   FormControl,
   FormHelperText,
   IconButton,
@@ -20,6 +22,7 @@ import {
   InputLabel,
   OutlinedInput,
   Slide,
+  Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import BigLogoAndPerosnal from "./BigLogoAndPerosnal.png";
@@ -49,13 +52,6 @@ export const CssTextField = styled(TextField)({
     },
   },
 });
-declare global {
-  interface Window {
-    signIn_url?: any;
-    BASE_LK?: any;
-    BASE_PASS_RECOVERY: any;
-  }
-}
 
 export default function SignIn() {
   const styles = useStyles();
@@ -67,7 +63,7 @@ export default function SignIn() {
   let url = window.signIn_url;
   const [showpassword, setShowPassword] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  const [status, setStatus] = React.useState(false);
+  const [emailRestore, setEmailRestore] = React.useState("");
   const [message, setMessage] = React.useState<any>("");
 
   const handleClickShowPassword = () => {
@@ -82,29 +78,29 @@ export default function SignIn() {
 
   const handleClose = () => {
     setOpen(false);
-
   };
 
   const handlOpenDialog = () => {
-    setMessage(
-      <CssTextField
-      margin="normal"
-      required
-      fullWidth
-      id="login"
-      label="Логин"
-      name="login"
-      autoComplete="login"
-      autoFocus
-      sx={{ mt: 0 }}
-    />
-    )
+    setMessage("");
     setOpen(true);
+  };
 
+  const CheckEmail = () => {
+    if (emailRestore === "") return false;
+    else return !pattern.test(emailRestore);
+  };
+
+  const SendRestorePasswordClick = () => {
+    if(pattern.test(emailRestore) && emailRestore !== ""){
+      setMessage("Письмо отправлено.");
+      setTimeout(() => {
+        setOpen(false);
+      }, 1000 * 10);
+    }
   };
 
   const RestorePassword = (
-    <Grow in={true} timeout={320} style={{ transformOrigin: '0 0 0' }}>
+    <Grow in={true} timeout={320} style={{ transformOrigin: "0 0 0" }}>
       <Grid
         container
         direction="row"
@@ -132,7 +128,6 @@ export default function SignIn() {
     };
 
     axios.post(url, JSON.stringify(LoginData)).then((response) => {
-
       if (
         response.data["status"] !== undefined &&
         response.data["status"] !== "ok"
@@ -182,7 +177,7 @@ export default function SignIn() {
               src={BigLogoAndPerosnal}
               style={{ marginLeft: "29%", width: "45%" }}
             />
-            <Grow in={true} timeout={250} style={{ transformOrigin: '0 0 0' }}>
+            <Grow in={true} timeout={250} style={{ transformOrigin: "0 0 0" }}>
               <CssTextField
                 margin="normal"
                 required
@@ -195,7 +190,7 @@ export default function SignIn() {
                 sx={{ mt: 0 }}
               />
             </Grow>
-            <Grow in={true} timeout={330} style={{ transformOrigin: '0 0 0' }}>
+            <Grow in={true} timeout={330} style={{ transformOrigin: "0 0 0" }}>
               <FormControl
                 fullWidth
                 variant="outlined"
@@ -234,15 +229,15 @@ export default function SignIn() {
                 />
               </FormControl>
             </Grow>
-            <Grow in={true} timeout={380} style={{ transformOrigin: '0 0 0' }}>
+            <Grow in={true} timeout={380} style={{ transformOrigin: "0 0 0" }}>
               <Grid item xs={12}>
                 <FormHelperText error>
                   {error !== "" ? `${error}` : ""}
                 </FormHelperText>
               </Grid>
             </Grow>
-            {/* {RestorePassword} */}
-            <Grow in={true} timeout={380} style={{ transformOrigin: '0 0 0' }}>
+            {window.BASE_PASS_RECOVERY === "1" ? RestorePassword : <></>}
+            <Grow in={true} timeout={380} style={{ transformOrigin: "0 0 0" }}>
               <Button
                 style={{ backgroundColor: "#3c5b77", textTransform: "none" }}
                 type="submit"
@@ -253,7 +248,7 @@ export default function SignIn() {
                 Войти
               </Button>
             </Grow>
-            <Grow in={true} timeout={380} style={{ transformOrigin: '0 0 0' }}>
+            <Grow in={true} timeout={380} style={{ transformOrigin: "0 0 0" }}>
               <Grid container justifyContent="center" alignItems="center">
                 <Grid item>
                   <Link className={styles.link} to={"/signup"}>
@@ -265,18 +260,50 @@ export default function SignIn() {
           </Box>
         </Box>
         <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            {message}
-          </DialogContentText>
-        </DialogContent>
-      </Dialog>
+          open={open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>
+            {"Введите почту, на которую был зарегестрирован пользователь"}
+          </DialogTitle>
+          <DialogContent>
+            <Grid item>
+              <CssTextField
+                margin="normal"
+                value={emailRestore}
+                onChange={(e) => {
+                  setEmailRestore(e.target.value);
+                }}
+                required
+                fullWidth
+                id="email"
+                label="Почта"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                sx={{ mt: 1 }}
+                error={CheckEmail()}
+              />
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <div style={{ color: "green", marginLeft: "8px" }}>{message}</div>
+            <Button
+              style={{
+                backgroundColor: "#3c5b77",
+                textTransform: "none",
+              }}
+              onClick={SendRestorePasswordClick}
+              variant="contained"
+              sx={{ mt: 1, mb: 1 }}
+            >
+              Отправить
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </ThemeProvider>
   );

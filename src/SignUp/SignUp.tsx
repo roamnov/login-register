@@ -5,7 +5,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Input from "@mui/material/Input";
 import Container from "@mui/material/Container";
 import axios from "axios";
 //import SelectOrg from './SelectOrg';
@@ -32,8 +31,8 @@ import BigLogoAndPerosnal from "../BigLogoAndPerosnal.png";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { CssTextField } from "../SignIn";
 import { useStyles } from "../Styles";
-import Grow from "@mui/material/Grow";
 import { IMaskInput } from "react-imask";
+import FormHelperText from "@mui/material/FormHelperText";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -43,13 +42,6 @@ const Transition = React.forwardRef(function Transition(
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
-declare global {
-  interface Window {
-    signUP_url?: any;
-    BASE_CAPTCHA?: any;
-  }
-}
 
 interface CustomProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
@@ -145,7 +137,17 @@ export default function SignUp() {
       });
   };
 
-  const second = (
+  const handleChangeSNILS = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let clearSnils: any = event.target.value;
+    clearSnils = clearSnils.replaceAll("-", "");
+    clearSnils = clearSnils.replaceAll(" ", "");
+    setSnils(event.target.value);
+    if (validateSnils(clearSnils)) {
+      setSnilsError("");
+    }
+  };
+
+  const CapthaJSX = (
     <Grid item xs={10}>
       <Grid
         container
@@ -174,7 +176,6 @@ export default function SignUp() {
             }}
           />
         </Grid>
-        {/* <Grid item> */}
         <Grid
           container
           direction="row"
@@ -191,11 +192,6 @@ export default function SignUp() {
             </IconButton>
           </Tooltip>
           <Grid item sx={{ pb: 1, pt: 1 }} style={{ width: "179px" }}>
-            {/* <input
-            type="text"
-            placeholder="Введите текст с картинки"
-            style={{ width: "64%" }}
-          /> */}
             <CssTextField
               size={"small"}
               id="captha"
@@ -213,7 +209,6 @@ export default function SignUp() {
             item
             sx={{ p: 1 }}
             style={{
-              // width: "100%",
               display: "flex",
               justifyContent: "center",
             }}
@@ -226,14 +221,46 @@ export default function SignUp() {
               size="small"
               variant="contained"
               onClick={sendCaptha}
-              // sx={{ mt: 3, mb: 2 }}
             >
               Отправить
             </Button>
           </Grid>
         </Grid>
-        {/* </Grid> */}
       </Grid>
+    </Grid>
+  );
+
+  const SnilsType = (
+    <Grid item xs={12} sm={12}>
+      <FormControl
+        fullWidth
+        variant="outlined"
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            "&.Mui-focused fieldset": { borderColor: "#3c5b77" },
+          },
+        }}
+      >
+        <InputLabel
+          required
+          htmlFor="snils"
+          sx={{ "&.Mui-focused": { color: "#3c5b77" } }}
+        >
+          СНИЛС
+        </InputLabel>
+        <OutlinedInput
+          required
+          fullWidth
+          value={snils}
+          onChange={handleChangeSNILS}
+          name="snils"
+          id="snils"
+          label="СНИЛС"
+          error={error.search("snils") !== -1}
+          inputComponent={TextMaskCustom as any}
+        />
+        <FormHelperText>{snilsError}</FormHelperText>
+      </FormControl>
     </Grid>
   );
 
@@ -254,7 +281,6 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let errors = "";
-    let checkbox = AllowData(event.currentTarget[13]);
 
     let SignUpData = {
       login: data.get("login"),
@@ -278,6 +304,10 @@ export default function SignUp() {
         errors += key;
         setError(errors);
       }
+      if (key === "snils" && snilsError !== "") {
+        errors += key;
+        setError(errors);
+      }
     }
 
     if (errors === "") {
@@ -292,28 +322,11 @@ export default function SignUp() {
         }
         setOpen(true);
       });
-    } /**/
+    }
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
-  };
-
-  const handleChangeSNILS = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let clearSnils: any = event.target.value;
-    clearSnils = clearSnils.replaceAll("-", "");
-    clearSnils = clearSnils.replaceAll(" ", "");
-    setSnils(SnilsMask(event.target.value));
-    // 188 389 195 47
-    var value = "18838919547";
-    var formatted = value.replace(
-      /^(\d{3})(\d{3})(\d{3})(\d{2}).*/,
-      "$1-$2-$3-$4"
-    );
-    console.log(clearSnils, formatted);
-    if (validateSnils(clearSnils)) {
-      setSnilsError("");
-    }
   };
 
   function validateSnils(snils: any) {
@@ -352,10 +365,6 @@ export default function SignUp() {
 
     return result;
   }
-
-  const AllowData = (input: any) => {
-    return input["checked"];
-  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -440,43 +449,11 @@ export default function SignUp() {
               </FormControl>
             </Grid>
             <SelectOrg error={error} setBackInfo={setInn} />
-            <Grid item xs={12} sm={12}>
-              <CssTextField
-                value={snils}
-                onChange={handleChangeSNILS}
-                required
-                fullWidth
-                id="snils"
-                label="СНИЛС"
-                name="snils"
-                error={error.search("snils") !== -1}
-                helperText={snilsError}
-              />
-              <FormControl
-                fullWidth
-                variant="outlined"
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    "&.Mui-focused fieldset": { borderColor: "#3c5b77" },
-                  },
-                }}
-              >
-                <InputLabel htmlFor="formatted-text-mask-input">
-                  СНИЛС
-                </InputLabel>
-                <OutlinedInput
-                  required
-                  fullWidth
-                  value={snils}
-                  onChange={handleChangeSNILS}
-                  name="snils"
-                  id="snils"
-                  error={error.search("snils") !== -1}
-                  inputComponent={TextMaskCustom as any}
-                  
-                />
-              </FormControl>
-            </Grid>
+            {window.BASE_SNILS_OR_FIO === "1" ? (
+              <SelectUser error={error} inn={inn} setBackInfo={setSnils} />
+            ) : (
+              SnilsType
+            )}
             <Grid item xs={12}>
               <FormControlLabel
                 style={{ color: error.search("checkbox") !== -1 ? "red" : "" }}
@@ -494,7 +471,7 @@ export default function SignUp() {
                 label="Я согласен на обработку персональных данных (настоящим подтверждаю, что в случае регистрации мною третьих лиц, предоставляю персональные данные с их согласия)"
               />
             </Grid>
-            {window.BASE_CAPTCHA === "0" ? <></> : second}
+            {window.BASE_CAPTCHA === "0" ? <></> : CapthaJSX}
           </Grid>
           <AlertDialogSlide
             setStatus={setStatus}
