@@ -92,10 +92,16 @@ export default function SignIn() {
 
   const SendRestorePasswordClick = () => {
     if(pattern.test(emailRestore) && emailRestore !== ""){
-      setMessage("Письмо отправлено.");
-      setTimeout(() => {
-        setOpen(false);
-      }, 1000 * 10);
+      let RestoreData = {
+        Login: emailRestore
+      };
+      
+      axios.post(url, JSON.stringify(RestoreData)).then((response) => {
+        setMessage("Письмо отправлено.");
+        setTimeout(() => {
+          setOpen(false);
+        }, 1000 * 10);
+      })
     }
   };
 

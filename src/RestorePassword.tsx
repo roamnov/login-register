@@ -31,7 +31,7 @@ export default function RestorePassword(props: any) {
   document.title = "Восстановление пароля";
   const [error, setError] = React.useState<string | null>("");
   // let url = window.signIn_url;
-  let url =  `${document.location.origin}/mobile~services/ChangePasswordLK`;
+  let url =  window.ChangePassword_url;
   const [showpassword, setShowPassword] = React.useState<any>({
     newPassword: false,
     newPasswordRepeat: false,

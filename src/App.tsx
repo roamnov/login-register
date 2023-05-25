@@ -14,6 +14,8 @@ declare global {
     BASE_CAPTCHA?: any;
     BASE_SNILS_OR_FIO?: any;
     BASE_UMI?: any;
+    ChangePassword_url?:any;
+    RestorePassword_url?:any;
   }
 }
 
