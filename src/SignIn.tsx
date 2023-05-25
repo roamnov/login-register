@@ -61,6 +61,7 @@ export default function SignIn() {
   );
   const [error, setError] = React.useState<string | null>("");
   let url = window.signIn_url;
+  let urlRestore = window.RestorePassword_url;
   const [showpassword, setShowPassword] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [emailRestore, setEmailRestore] = React.useState("");
