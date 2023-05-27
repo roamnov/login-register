@@ -65,7 +65,7 @@ export default function SignUpUMI() {
   const [message, setMessage] = React.useState("");
   const [error, setError] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [ContractDate, setContractDate] = React.useState(
+  const [ContractDate, setContractDate] = React.useState<any>(
     dayjs(`${CurrentDate.getFullYear()}-01-01`)
   );
   const [captcha, setCaptcha] = React.useState("");
@@ -87,7 +87,7 @@ export default function SignUpUMI() {
 
   const getCaptha = (color?: any) => {
     axios.get(`${document.location.origin}/mobile~captcha`).then((res) => {
-      // 
+      //
       setCaptcha("");
       setDataCapctha({
         img: "data:image/gif;base64," + res.data.RCDATA,
@@ -99,7 +99,7 @@ export default function SignUpUMI() {
   };
 
   const sendCaptha = () => {
-    // 
+    //
     axios
       .get(
         `${document.location.origin}/mobile~captcha?ident=${DataCaptcha.ident}&check=${captcha}`
@@ -237,6 +237,7 @@ export default function SignUpUMI() {
     const data = new FormData(event.currentTarget);
     let errors = "";
 
+    console.log(ContractDate["$D"] + "." + (ContractDate["$M"]+ 1) + "." +ContractDate["$y"])
     let SignUpData = {
       login: data.get("login"),
       email: data.get("email"),
@@ -246,7 +247,7 @@ export default function SignUpUMI() {
       FirstName: data.get("FirstName"),
       MiddleName: data.get("MiddleName"),
       ContractNumber: data.get("ContractNumber"),
-      ContractDate: ContractDate,
+      ContractDate: ContractDate["$D"] + "." + (ContractDate["$M"]+ 1) + "." +ContractDate["$y"],
     };
 
     if (!checked) {
@@ -525,7 +526,7 @@ export default function SignUpUMI() {
                       <DateField
                         value={ContractDate}
                         onChange={(newValue: any) => setContractDate(newValue)}
-                        format="DD/MM/YYYY"
+                        format="DD.MM.YYYY"
                         sx={{
                           "& label.Mui-focused": {
                             color: "#3c5b77",

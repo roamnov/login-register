@@ -44,6 +44,7 @@ export default function RestorePassword(props: any) {
 
   React.useEffect(() => {
     const urlParams: any = new URLSearchParams(window.location.search);
+    console.log(urlParams,urlParams.has("token"), window.location.search)
     if (urlParams.has("token")) {
       setToken(urlParams.get("token"));
     } else {
@@ -63,6 +64,7 @@ export default function RestorePassword(props: any) {
     let LoginData = {
       Password: data.get("newPassword"),
       token: token,
+      needOld:"no"
     };
 
     if (data.get("newPassword") === data.get("newPasswordRepeat")) {

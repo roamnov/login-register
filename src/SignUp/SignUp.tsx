@@ -80,7 +80,7 @@ export default function SignUp() {
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = React.useState(false);
   const [message, setMessage] = React.useState("");
-  const [snils, setSnils] = React.useState("000-000-000-00");
+  const [snils, setSnils] = React.useState("");
   const [inn, setInn] = React.useState();
   const [snilsError, setSnilsError] = React.useState("");
   const [error, setError] = React.useState("");
