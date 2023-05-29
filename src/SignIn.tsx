@@ -92,17 +92,21 @@ export default function SignIn() {
   };
 
   const SendRestorePasswordClick = () => {
-    if(pattern.test(emailRestore) && emailRestore !== ""){
+    if (pattern.test(emailRestore) && emailRestore !== "") {
       let RestoreData = {
-        Login: emailRestore
+        Login: emailRestore,
       };
 
       axios.post(urlRestore, JSON.stringify(RestoreData)).then((response) => {
-        setMessage("Письмо отправлено.");
-        setTimeout(() => {
-          setOpen(false);
-        }, 1000 * 10);
-      })
+        if (response.data.status === "ok") {
+          setMessage("Письмо отправлено.");
+          setTimeout(() => {
+            setOpen(false);
+          }, 1000 * 10);
+        } else {
+          setMessage(response.data.status);
+        }
+      });
     }
   };
 
