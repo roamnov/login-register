@@ -6,7 +6,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import "../Styles.ts";
+import FormHelperText from "@mui/material/FormHelperText";
 import Container from "@mui/material/Container";
 import axios from "axios";
 //import SelectOrg from './SelectOrg';
@@ -58,16 +58,18 @@ export default function SignUpUMI() {
   var pattern = new RegExp(
     /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
   );
+  const PasswordPattern = new RegExp(
+    /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.])(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$/
+  );
   document.title = "Регистрация";
   const CurrentDate = new Date();
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = React.useState(false);
   const [message, setMessage] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [ContractDate, setContractDate] = React.useState<any>(
-    dayjs(`${CurrentDate.getFullYear()}-01-01`)
-  );
+  const [ContractDate, setContractDate] = React.useState<any>(null);
   const [captcha, setCaptcha] = React.useState("");
   const [DataCaptcha, setDataCapctha] = React.useState<any>({
     passed: window.BASE_CAPTCHA === "0" ? true : false,
@@ -75,6 +77,7 @@ export default function SignUpUMI() {
   });
   const [showpassword, setShowPassword] = React.useState(false);
   const [checked, setChecked] = React.useState(false);
+  const [helperTextPassword, sethelperTextPassword] = React.useState("");
 
   const url = window.signUP_url;
 
@@ -236,8 +239,6 @@ export default function SignUpUMI() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let errors = "";
-
-    console.log(ContractDate["$D"] + "." + (ContractDate["$M"]+ 1) + "." +ContractDate["$y"])
     let SignUpData = {
       login: data.get("login"),
       email: data.get("email"),
@@ -247,7 +248,12 @@ export default function SignUpUMI() {
       FirstName: data.get("FirstName"),
       MiddleName: data.get("MiddleName"),
       ContractNumber: data.get("ContractNumber"),
-      ContractDate: ContractDate["$D"] + "." + (ContractDate["$M"]+ 1) + "." +ContractDate["$y"],
+      ContractDate:
+        ContractDate["$D"] +
+        "." +
+        (ContractDate["$M"] + 1) +
+        "." +
+        ContractDate["$y"],
     };
 
     if (!checked) {
@@ -257,8 +263,10 @@ export default function SignUpUMI() {
 
     for (const [key, value] of Object.entries(SignUpData)) {
       if (value === "" || value === undefined) {
-        errors += key;
-        setError(errors);
+        if (key !== "MiddleName") {
+          errors += key;
+          setError(errors);
+        }
       }
       if (key === "email" && pattern.test(email) === false) {
         errors += key;
@@ -285,6 +293,30 @@ export default function SignUpUMI() {
     setEmail(event.target.value);
   };
 
+  const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let errorLocal: any = error;
+    if (event.target.id === "password") {
+      errorLocal.replace("password", "");
+      if (!PasswordPattern.test(event.target.value)) {
+        errorLocal += "password";
+        sethelperTextPassword(
+          "По валидации пароля минимум 8 символов, 1 цифра, латинская буква верхнего и буква нижнего регистра."
+        );
+      } else {
+        sethelperTextPassword("");
+      }
+      setPassword(event.target.value);
+    } else {
+      errorLocal.replace("passwordSubmit", "");
+      if (password !== event.target.value) {
+        errorLocal += "passwordSubmit";
+        sethelperTextPassword("Пароли должны совпадать!");
+      } else {
+        sethelperTextPassword("");
+      }
+    }
+    setError(errorLocal);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -369,19 +401,74 @@ export default function SignUpUMI() {
                   >
                     Пароль
                   </InputLabel>
+
                   <OutlinedInput
                     type={showpassword ? "text" : "password"}
                     required
+                    value={password}
                     fullWidth
                     id="password"
                     label="Пароль"
                     name="password"
                     error={error.search("password") !== -1}
-                    onChange={unableError}
+                    onChange={(e: any) => {
+                      handleChangePassword(e);
+                      unableError(e);
+                    }}
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
                           aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showpassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                  <FormHelperText>{helperTextPassword}</FormHelperText>
+                </FormControl>
+              </Grow>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Grow
+                in={true}
+                timeout={300}
+                style={{ transformOrigin: "0 0 0" }}
+              >
+                <FormControl
+                  fullWidth
+                  variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "&.Mui-focused fieldset": { borderColor: "#3c5b77" },
+                    },
+                  }}
+                >
+                  <InputLabel
+                    required
+                    htmlFor="passwordSubmit"
+                    sx={{ "&.Mui-focused": { color: "#3c5b77" } }}
+                  >
+                    Подтвердите пароль
+                  </InputLabel>
+                  <OutlinedInput
+                    type={showpassword ? "text" : "password"}
+                    required
+                    fullWidth
+                    id="passwordSubmit"
+                    label="Подтвердите пароль"
+                    name="passwordSubmit"
+                    error={error.search("passwordSubmit") !== -1}
+                    onChange={(e: any) => {
+                      handleChangePassword(e);
+                      unableError(e);
+                    }}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
                           onClick={handleClickShowPassword}
                           onMouseDown={handleMouseDownPassword}
                           edge="end"
@@ -531,10 +618,9 @@ export default function SignUpUMI() {
                           "& label.Mui-focused": {
                             color: "#3c5b77",
                           },
-
                           "& .MuiOutlinedInput-root": {
                             "&.Mui-focused fieldset": {
-                              borderColor: "#3c5b77",
+                              borderColor: "#3c5b77 !important",
                             },
                           },
                         }}
