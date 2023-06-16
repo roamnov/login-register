@@ -583,7 +583,7 @@ export default function SignUpUMI() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Grid item xs={6} sx={{ pr: 0.5 }}>
+                  <Grid item xs={6} sx={{ pr: 1 }}>
                     <CssTextField
                       required
                       id="ContractNumber"
@@ -593,7 +593,7 @@ export default function SignUpUMI() {
                       onChange={unableError}
                     />
                   </Grid>
-                  <Grid item xs={6} sx={{ pl: 0.5 }}>
+                  <Grid item xs={6} sx={{ pl: 1 }}>
                     {/* <CssTextField
                       required
                       id="ContractDate"
@@ -614,6 +614,8 @@ export default function SignUpUMI() {
                         value={ContractDate}
                         onChange={(newValue: any) => setContractDate(newValue)}
                         format="DD.MM.YYYY"
+                        label={"Дата договора"}
+                        required
                         sx={{
                           "& label.Mui-focused": {
                             color: "#3c5b77",

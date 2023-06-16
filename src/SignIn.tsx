@@ -65,7 +65,7 @@ export default function SignIn() {
   const [showpassword, setShowPassword] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [emailRestore, setEmailRestore] = React.useState("");
-  const [message, setMessage] = React.useState<any>("");
+  const [message, setMessage] = React.useState<any>({message: "", color:"green"});
 
   const handleClickShowPassword = () => {
     setShowPassword(!showpassword);
@@ -82,7 +82,7 @@ export default function SignIn() {
   };
 
   const handlOpenDialog = () => {
-    setMessage("");
+    setMessage({...message, message:""});
     setOpen(true);
   };
 
@@ -99,12 +99,12 @@ export default function SignIn() {
 
       axios.post(urlRestore, JSON.stringify(RestoreData)).then((response) => {
         if (response.data.status === "ok") {
-          setMessage("Письмо отправлено.");
+          setMessage({message:"Письмо отправлено.", color:"green"});
           setTimeout(() => {
             setOpen(false);
           }, 1000 * 10);
         } else {
-          setMessage(response.data.status);
+          setMessage({message :response.data.status, color: "red"});
         }
       });
     }
@@ -209,6 +209,7 @@ export default function SignIn() {
                   "& .MuiOutlinedInput-root": {
                     "&.Mui-focused fieldset": { borderColor: "#3c5b77" },
                   },
+                  mt:1
                 }}
               >
                 <InputLabel
@@ -278,7 +279,7 @@ export default function SignIn() {
           aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle>
-            {"Введите почту, на которую был зарегестрирован пользователь"}
+            {"Введите адрес электронной почты, указанный при регистрации вашей учетной записи"}
           </DialogTitle>
           <DialogContent>
             <Grid item>
@@ -291,7 +292,7 @@ export default function SignIn() {
                 required
                 fullWidth
                 id="email"
-                label="Почта"
+                label="E-mail"
                 name="email"
                 autoComplete="email"
                 autoFocus
@@ -301,7 +302,7 @@ export default function SignIn() {
             </Grid>
           </DialogContent>
           <DialogActions>
-            <div style={{ color: "green", marginLeft: "8px" }}>{message}</div>
+            <div style={{ color: message.color, marginLeft: "8px" , marginRight:"2%"}}>{message.message}</div>
             <Button
               style={{
                 backgroundColor: "#3c5b77",
@@ -309,7 +310,7 @@ export default function SignIn() {
               }}
               onClick={SendRestorePasswordClick}
               variant="contained"
-              sx={{ mt: 1, mb: 1 }}
+              sx={{ mt: 1, mb: 1, minWidth:"108px" }}
             >
               Отправить
             </Button>
