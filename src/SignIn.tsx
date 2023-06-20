@@ -13,7 +13,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   FormControl,
   FormHelperText,
@@ -22,7 +21,6 @@ import {
   InputLabel,
   OutlinedInput,
   Slide,
-  Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import BigLogoAndPerosnal from "./BigLogoAndPerosnal.png";
@@ -186,7 +184,7 @@ export default function SignIn() {
           >
             <img
               src={BigLogoAndPerosnal}
-              style={{ marginLeft: "0", width: "45%" }}
+              style={{ marginLeft: "29%", width: "45%" }}
             />
             <Grow in={true} timeout={250} style={{ transformOrigin: "0 0 0" }}>
               <CssTextField
