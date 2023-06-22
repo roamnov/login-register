@@ -184,7 +184,7 @@ export default function SignIn() {
           >
             <img
               src={BigLogoAndPerosnal}
-              style={{ marginLeft: "29%", width: "45%" }}
+              style={{ marginLeft:navigator.userAgent.includes("Firefox")?"3%": "29%", width: "45%" }}
             />
             <Grow in={true} timeout={250} style={{ transformOrigin: "0 0 0" }}>
               <CssTextField
