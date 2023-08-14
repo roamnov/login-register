@@ -76,6 +76,9 @@ export default function SignUp() {
   var pattern = new RegExp(
     /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
   );
+  const PasswordPattern = new RegExp(
+    /(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,20}$)/
+  );
   document.title = "Регистрация";
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = React.useState(false);
@@ -86,6 +89,7 @@ export default function SignUp() {
   const [error, setError] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [captcha, setCaptcha] = React.useState("");
+  const [helperTextPassword, sethelperTextPassword] = React.useState("");
   const [DataCaptcha, setDataCapctha] = React.useState<any>({
     passed: window.BASE_CAPTCHA === "0" ? true : false,
     color: "",
@@ -95,12 +99,13 @@ export default function SignUp() {
 
   const url = window.signUP_url;
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showpassword);
-  };
   React.useEffect(() => {
     if (window.BASE_CAPTCHA === "1") getCaptha();
   }, []);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showpassword);
+  };
 
   const getCaptha = (color?: any) => {
     axios.get(`${document.location.origin}/mobile~captcha`).then((res) => {
@@ -120,6 +125,23 @@ export default function SignUp() {
     if (error.search(event.target.id) !== -1) {
       setError(error.replace(event.target.id, ""));
     }
+  };
+
+  const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let errorLocal: any = error;
+    if (event.target.id === "password") {
+      errorLocal = errorLocal.replaceAll("password", "");
+      if (!PasswordPattern.test(event.target.value)) {
+        errorLocal += "password";
+        sethelperTextPassword(
+          "Пароль должен быть длиной от 6 до 20 символов, должен содержать цифры и хотя бы одну букву в нижнем регистре и верхнем регистре. Используется только латинский алфавит."
+        );
+      } else {
+        sethelperTextPassword("");
+      }
+      // setPassword(event.target.value);
+    }
+    setError(errorLocal);
   };
 
   const sendCaptha = () => {
@@ -432,6 +454,7 @@ export default function SignUp() {
                   id="password"
                   label="Пароль"
                   name="password"
+                  onChange={handleChangePassword}
                   error={error.search("password") !== -1}
                   endAdornment={
                     <InputAdornment position="end">
@@ -446,6 +469,7 @@ export default function SignUp() {
                     </InputAdornment>
                   }
                 />
+                <FormHelperText>{helperTextPassword}</FormHelperText>
               </FormControl>
             </Grid>
             <SelectOrg error={error} setBackInfo={setInn} />
