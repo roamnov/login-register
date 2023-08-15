@@ -86,6 +86,7 @@ export default function SignUp() {
   const [snils, setSnils] = React.useState("");
   const [inn, setInn] = React.useState();
   const [snilsError, setSnilsError] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [captcha, setCaptcha] = React.useState("");
@@ -127,10 +128,18 @@ export default function SignUp() {
     }
   };
 
+  const unableError = (event: any) => {
+    const name = event.target.id;
+    if (error.search(name) !== -1) {
+      setError(error.replace(name, ""));
+    }
+  };
+
   const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     let errorLocal: any = error;
     if (event.target.id === "password") {
       errorLocal = errorLocal.replaceAll("password", "");
+      setPassword(event.target.value);
       if (!PasswordPattern.test(event.target.value)) {
         errorLocal += "password";
         sethelperTextPassword(
@@ -140,6 +149,14 @@ export default function SignUp() {
         sethelperTextPassword("");
       }
       // setPassword(event.target.value);
+    } else {
+      errorLocal.replaceAll("passwordSubmit", "");
+      if (password !== event.target.value) {
+        errorLocal += "passwordSubmit";
+        sethelperTextPassword("Пароли должны совпадать!");
+      } else {
+        sethelperTextPassword("");
+      }
     }
     setError(errorLocal);
   };
@@ -451,6 +468,7 @@ export default function SignUp() {
                   type={showpassword ? "text" : "password"}
                   required
                   fullWidth
+                  value={password}
                   id="password"
                   label="Пароль"
                   name="password"
@@ -470,6 +488,57 @@ export default function SignUp() {
                   }
                 />
                 <FormHelperText>{helperTextPassword}</FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <FormControl
+                fullWidth
+                variant="outlined"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "&.Mui-focused fieldset": { borderColor: "#3c5b77" },
+                  },
+                }}
+              >
+                <InputLabel
+                  required
+                  htmlFor="passwordSubmit"
+                  sx={{ "&.Mui-focused": { color: "#3c5b77" } }}
+                >
+                  Подтвердите пароль
+                </InputLabel>
+                <OutlinedInput
+                  type={showpassword ? "text" : "password"}
+                  required
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    return false;
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    return false;
+                  }}
+                  fullWidth
+                  id="passwordSubmit"
+                  label="Подтвердите пароль"
+                  name="passwordSubmit"
+                  error={error.search("passwordSubmit") !== -1}
+                  onChange={(e: any) => {
+                    handleChangePassword(e);
+                    unableError(e);
+                  }}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showpassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
               </FormControl>
             </Grid>
             <SelectOrg error={error} setBackInfo={setInn} />
