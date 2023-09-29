@@ -262,7 +262,7 @@ export default function SignIn() {
               <Grid container justifyContent="center" alignItems="center">
                 <Grid item>
                   <Link className={styles.link} to={"/signup"}>
-                    {"Нет учётной записи? Зарегистрируйтесь"}
+                    {window.BASE_LINK_TEXT}
                   </Link>
                 </Grid>
               </Grid>

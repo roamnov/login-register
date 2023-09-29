@@ -17,6 +17,7 @@ declare global {
     ChangePassword_url?:any;
     RestorePassword_url?:any;
     BASE_margin_logo?:any;
+    BASE_LINK_TEXT?:any;
   }
 }
 
