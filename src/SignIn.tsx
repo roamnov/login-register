@@ -150,7 +150,7 @@ export default function SignIn() {
             "?" +
             `Guid=${response.data["licguid"]}&stimWebSrv=${
               response.data["stimwebsrv"]
-            }&from=${window.location.href.replaceAll("/", "@")}`;
+            }&from=${window.location.href.replace("#/","").replaceAll("/", "@")}`;
         else
           href =
             response.data["browser"] +
@@ -176,16 +176,16 @@ export default function SignIn() {
             alignItems: "center",
           }}
         >
+          <img
+            src={BigLogoAndPerosnal}
+            style={{ marginLeft:"", width: "45%" }} // navigator.userAgent.includes("Firefox")?"3%": "29%"
+          />
           <Box
             component="form"
             onSubmit={handleSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
-            <img
-              src={BigLogoAndPerosnal}
-              style={{ marginLeft:window.BASE_margin_logo, width: "45%" }} // navigator.userAgent.includes("Firefox")?"3%": "29%"
-            />
             <Grow in={true} timeout={250} style={{ transformOrigin: "0 0 0" }}>
               <CssTextField
                 margin="normal"
