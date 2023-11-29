@@ -18,6 +18,7 @@ declare global {
     RestorePassword_url?: any;
     BASE_margin_logo?: any;
     BASE_LINK_TEXT?: any;
+    do_esia_auth?:any;
   }
 }
 

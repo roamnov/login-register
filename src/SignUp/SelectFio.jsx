@@ -33,6 +33,7 @@ const SelectUser = (props) => {
     axios.get(url + `&inn=${props.inn}`).then((response) => {
       if (Object.keys(response.data).length == 0) {
         setUserList([]);
+        setLoad(false);
       } else {
         setLoad(false);
         setUserList(response.data);
@@ -56,6 +57,7 @@ const SelectUser = (props) => {
         getOptionLabel={(option) => option.name}
         disablePortal
         fullWidth
+        noOptionsText={"Данные отсутствуют."}
         value={value}
         onChange={(event, newValue) => {
           props.setBackInfo(newValue.snils);

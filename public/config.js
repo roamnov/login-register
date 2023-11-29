@@ -8,6 +8,7 @@ var signIn_url = `${document.location.origin}/mobile~account?single=${window.BAS
 var signUP_url = `${document.location.origin}/web~RegistrationLK/create`;//url для входа регистрации
 var ORG_url = `${document.location.origin}/mobile~registration/values?type=inn`;//url для получения списка организаций
 var FIO_url = `${document.location.origin}/mobile~registration/values?type=snils`;// url для запроса в поле ФИО(инн сам добавится в коде)
+var do_esia_auth = "http://stim-srv.krista.ru:8080/esia"//вход через гос услуги, если что то задано, то кнопка отобразиться, и при клике на нее будет перенаправление
 
 var ChangePassword_url = `${document.location.origin}/web~ChangePasswordLK`//Смена пароля принимает новый пароль
 var RestorePassword_url = `${document.location.origin}/web~RestorePasswordLK`// Запрос на отправку письма на почту, с ссылкой на регистрацию нового пароля

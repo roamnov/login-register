@@ -9,7 +9,7 @@ import Container from "@mui/material/Container";
 import axios from "axios";
 //import SelectOrg from './SelectOrg';
 import SelectUser from "./SelectFio";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SelectOrg from "./SelectOrg";
 import AlertDialogSlide from "./Alert";
 import { TransitionProps } from "@mui/material/transitions";
@@ -80,6 +80,7 @@ export default function SignUp() {
     /(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,20}$)/
   );
   document.title = "Регистрация";
+  const navigate = useNavigate()
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = React.useState(false);
   const [message, setMessage] = React.useState("");
@@ -103,7 +104,7 @@ export default function SignUp() {
   React.useEffect(() => {
     if (window.BASE_CAPTCHA === "1") getCaptha();
   }, []);
-
+  
   const handleClickShowPassword = () => {
     setShowPassword(!showpassword);
   };
@@ -138,16 +139,16 @@ export default function SignUp() {
   const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     let errorLocal: any = error;
     if (event.target.id === "password") {
-      errorLocal = errorLocal.replaceAll("password", "");
+      // errorLocal = errorLocal.replaceAll("password", "");
       setPassword(event.target.value);
-      if (!PasswordPattern.test(event.target.value)) {
-        errorLocal += "password";
-        sethelperTextPassword(
-          "Пароль должен быть длиной от 6 до 20 символов, должен содержать цифры и хотя бы одну букву в нижнем регистре и верхнем регистре. Используется только латинский алфавит."
-        );
-      } else {
-        sethelperTextPassword("");
-      }
+      // if (!PasswordPattern.test(event.target.value)) {
+      //   errorLocal += "password";
+      //   sethelperTextPassword(
+      //     "Пароль должен быть длиной от 6 до 20 символов, должен содержать цифры и хотя бы одну букву в нижнем регистре и верхнем регистре. Используется только латинский алфавит."
+      //   );
+      // } else {
+      //   sethelperTextPassword("");
+      // }
       // setPassword(event.target.value);
     } else {
       errorLocal.replaceAll("passwordSubmit", "");
@@ -312,7 +313,7 @@ export default function SignUp() {
   const handleClose = () => {
     setOpen(false);
     if (status === true) {
-      window.history.back();
+      navigate("/")
     }
   };
 
@@ -355,9 +356,11 @@ export default function SignUp() {
         if (response.data["status"] === "ok") {
           setStatus(true);
           setMessage(response.data["message"]);
+          sethelperTextPassword("")
         } else {
           setStatus(false);
           setMessage(response.data["status"]);
+          sethelperTextPassword(response.data.info)
         }
         setOpen(true);
       });
