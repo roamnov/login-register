@@ -33,10 +33,7 @@ import Captha from "./SignUp/Captha";
 
 const theme = createTheme();
 
-const Transition = React.forwardRef(function Transition(
-  props,
-  ref
-) {
+const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
@@ -99,7 +96,7 @@ export default function SignIn() {
   const [emailRestore, setEmailRestore] = React.useState("");
   const [action, setAction] = React.useState("");
   const [org, setOrg] = React.useState();
-  const [selectOrg, SetSelectOrg]=React.useState()
+  const [selectOrg, SetSelectOrg] = React.useState();
   const [message, setMessage] = React.useState({
     message: "",
     color: "green",
@@ -133,8 +130,9 @@ export default function SignIn() {
       }
     }
     if (hasURLparam("orgs")) {
-      console.log(JSON.parse(atob(getURLparam("orgs"))));
-      setOrg(JSON.parse(atob(getURLparam("orgs"))));
+      setOrg(
+        JSON.parse(decodeURIComponent(escape(window.atob(getURLparam("orgs")))))
+      );
     }
   }, []);
 
@@ -232,15 +230,13 @@ export default function SignIn() {
     );
   };
 
-  let contentForModalObj= {
-    "1": <BlockingCaptha />,
-    "2": <EmailRestore />,
-    "3": <DefaultContent />,
+  let contentForModalObj = {
+    1: <BlockingCaptha />,
+    2: <EmailRestore />,
+    3: <DefaultContent />,
   };
 
-  const handleMouseDownPassword = (
-    event
-  ) => {
+  const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
@@ -312,23 +308,27 @@ export default function SignIn() {
       UserName: data.get("login"),
       Password: data.get("password"),
     };
-    if(hasURLparam("orgs")){
-      if(selectOrg === undefined){
+    if (hasURLparam("orgs")) {
+      if (selectOrg === undefined) {
         setError("Выберите организацию.");
-        return
+        return;
       }
-      axios.post(window.do_esia_org, JSON.stringify({ksp:selectOrg.ksp, snils: org.snils})).then((res)=>{
-        CheckAnswerSubmit(res)
-      })
-
-    }else{
+      axios
+        .post(
+          window.do_esia_org,
+          JSON.stringify({ ksp: selectOrg.ksp, snils: org.snils })
+        )
+        .then((res) => {
+          CheckAnswerSubmit(res);
+        });
+    } else {
       axios.post(url, JSON.stringify(LoginData)).then((response) => {
-        CheckAnswerSubmit(response)
+        CheckAnswerSubmit(response);
       });
     }
   };
 
-  const CheckAnswerSubmit = (response) =>{
+  const CheckAnswerSubmit = (response) => {
     if (
       response.data["status"] !== undefined &&
       response.data["status"] !== "ok"
@@ -370,7 +370,7 @@ export default function SignIn() {
 
       window.location.href = href;
     }
-  }
+  };
 
   const MainContent = () => {
     return (
@@ -490,23 +490,26 @@ export default function SignIn() {
             component="form"
             onSubmit={handleSubmit}
             noValidate
-            sx={{ mt: 1 }}
+
+            sx={{ mt: 1, width:"81%" }}
           >
             {!org ? (
               <MainContent />
             ) : (
               <Autocomplete
-              disablePortal
-              value={selectOrg}
-              onChange={(e, newVal)=>{
-                setError("")
-                SetSelectOrg(newVal)
-              }}
-              id="orgs"
-              getOptionLabel={(option) =>option.orgname}
-              options={org.orgs}
-              sx={{ width: 300 }}
-              renderInput={(params) => <CssTextField {...params} label="Организация" />}
+                disablePortal
+                fullWidth
+                value={selectOrg}
+                onChange={(e, newVal) => {
+                  setError("");
+                  SetSelectOrg(newVal);
+                }}
+                id="orgs"
+                getOptionLabel={(option) => option.orgname}
+                options={org.orgs}
+                renderInput={(params) => (
+                  <CssTextField {...params} label="Организация" />
+                )}
               />
             )}
             <Grow in={true} timeout={380} style={{ transformOrigin: "0 0 0" }}>
@@ -528,15 +531,21 @@ export default function SignIn() {
                 Войти
               </Button>
             </Grow>
-            <Grow in={true} timeout={380} style={{ transformOrigin: "0 0 0" }}>
-              <Grid container justifyContent="center" alignItems="center">
-                <Grid item>
-                  <Link className={styles.link} to={"/signup"}>
-                    {window.BASE_LINK_TEXT}
-                  </Link>
+            {!org ? (
+              <Grow
+                in={true}
+                timeout={380}
+                style={{ transformOrigin: "0 0 0" }}
+              >
+                <Grid container justifyContent="center" alignItems="center">
+                  <Grid item>
+                    <Link className={styles.link} to={"/signup"}>
+                      {window.BASE_LINK_TEXT}
+                    </Link>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Grow>
+              </Grow>
+            ) : null}
           </Box>
         </Box>
         <Dialog
