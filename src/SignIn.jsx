@@ -351,7 +351,8 @@ export default function SignIn() {
       }
     } else {
       let href;
-      if (window.BASE_LK === "1")
+      if (window.BASE_LK === "1") {
+        const authed_by = response.data["authed_by"];
         href =
           response.data["browser"] +
           "?" +
@@ -360,11 +361,18 @@ export default function SignIn() {
           }&from=${window.location.href
             .replace("#/", "")
             .replaceAll("/", "@")}`;
-      else
+        if (authed_by) {
+          href += `&authed_by=${authed_by}`;
+          href.replace(`&from=${window.location.href
+            .replace("#/", "")
+            .replaceAll("/", "@")}`, "")
+        }
+      } else {
         href =
           response.data["browser"] +
           "?" +
           `authParam={'licGuid':'${response.data["licguid"]}','stimWebSrv':'${response.data["stimwebsrv"]}'}`;
+      }
       // let href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
       // let href = response.data['browser'] + "?"+ `authParam={'licGuid':'${response.data['licguid']}','stimWebSrv':'${response.data['stimwebsrv']}'}`
 
@@ -490,8 +498,7 @@ export default function SignIn() {
             component="form"
             onSubmit={handleSubmit}
             noValidate
-
-            sx={{ mt: 1, width:"81%" }}
+            sx={{ mt: 1, width: "81%" }}
           >
             {!org ? (
               <MainContent />
