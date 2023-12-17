@@ -130,8 +130,9 @@ export default function SignIn() {
       }
     }
     if (hasURLparam("orgs")) {
+      let orgsFromUrl = getURLparam("orgs").replaceAll("-", "+").replaceAll("_", "/")
       setOrg(
-        JSON.parse(decodeURIComponent(escape(window.atob(getURLparam("orgs")))))
+        JSON.parse(decodeURIComponent(escape(window.atob(orgsFromUrl))))
       );
     }
   }, []);
@@ -313,14 +314,17 @@ export default function SignIn() {
         setError("Выберите организацию.");
         return;
       }
-      axios
-        .post(
-          window.do_esia_org,
-          JSON.stringify({ ksp: selectOrg.ksp, snils: org.snils })
-        )
-        .then((res) => {
-          CheckAnswerSubmit(res);
-        });
+      let urlEsia = window.do_esia_org
+      urlEsia +=`&ksp=${selectOrg.ksp}` + `&snils=${org.snils}` + `&lastName=${org.lastName}` + `&middleName=${org.middleName}`+ `&firstName=${org.firstName}`
+      window.location.href = urlEsia;
+      // axios
+      //   .post(
+      //     window.do_esia_org,
+      //     JSON.stringify({ ksp: selectOrg.ksp, snils: org.snils, lastName:org.lastName, middleName:org.middleName,firstName:org.firstName})
+      //   )
+      //   .then((res) => {
+      //     CheckAnswerSubmit(res);
+      //   });
     } else {
       axios.post(url, JSON.stringify(LoginData)).then((response) => {
         CheckAnswerSubmit(response);
