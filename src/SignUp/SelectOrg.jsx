@@ -2,12 +2,13 @@ import { useState } from "react";
 import {
   Grid,
   Autocomplete,
-  TextField,
   CircularProgress,
   styled,
 } from "@mui/material";
 import { CssTextField } from "../SignIn";
 import axios from "axios";
+import parse from "autosuggest-highlight/parse";
+import match from "autosuggest-highlight/match";
 
 const SelectOrg = (props) => {
   const [value, setValue] = useState();
@@ -44,6 +45,7 @@ const SelectOrg = (props) => {
         }}
         loadingText={<CircularProgress />}
         disableClearable
+        filterOptions={(options, state) => options}
         disablePortal
         fullWidth
         value={value}
@@ -56,7 +58,7 @@ const SelectOrg = (props) => {
           setInputValue(newInputValue);
         }}
         options={orgs}
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option.name || ""}
         renderInput={(params) => (
           <CssTextField
             {...params}
@@ -68,6 +70,30 @@ const SelectOrg = (props) => {
             sx={{}}
           />
         )}
+        renderOption={(props, option, { inputValue }) => {
+          if(option && inputValue){
+            const text = option.text;
+            const matches = match(text, inputValue);
+            const parts = parse(text, matches);
+    
+            return (
+              <li {...props}>
+                <div>
+                  {parts.map((part, index) => (
+                    <span
+                      key={index}
+                      style={{
+                        fontWeight: part.highlight ? 700 : 400,
+                      }}
+                    >
+                      {part.text}
+                    </span>
+                  ))}
+                </div>
+              </li>
+            );
+          }
+        }}
       />
     </Grid>
   );
