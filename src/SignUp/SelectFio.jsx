@@ -8,10 +8,13 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { CssTextField } from "../SignIn";
+import parse from "autosuggest-highlight/parse";
+import match from "autosuggest-highlight/match";
 
 const SelectUser = (props) => {
   const [value, setValue] = useState();
   const [users, setUserList] = useState(new Array());
+  const [inputValue, setInputValue] = useState("");
   const [loading, setLoad] = useState(true);
 
   useEffect(() => {
@@ -54,12 +57,17 @@ const SelectUser = (props) => {
         onOpen={getUser}
         disableClearable
         options={users}
-        getOptionLabel={(option) => option.name}
-        disablePortal
+        getOptionLabel={(option) => option.name|| ""}
+
         fullWidth
-        noOptionsText={"Данные отсутствуют."}
+        noOptionsText="Ничего не найдено."
         value={value}
+        inputValue={inputValue}
+        onInputChange={(event, newInputValue) => {
+          setInputValue(newInputValue);
+        }}
         onChange={(event, newValue) => {
+          setValue(newValue.name)
           props.setBackInfo(newValue.snils);
         }}
         renderInput={(params) => (
@@ -72,6 +80,28 @@ const SelectUser = (props) => {
             error={props.error.search("snils") !== -1}
           />
         )}
+        renderOption={(props, option, { inputValue }) => {
+          const text = option.name;
+          const matches = match(text, inputValue);
+          const parts = parse(text, matches);
+
+          return (
+            <li {...props}>
+              <div>
+                {parts.map((part, index) => (
+                  <span
+                    key={index}
+                    style={{
+                      fontWeight: part.highlight ? 700 : 400,
+                    }}
+                  >
+                    {part.text}
+                  </span>
+                ))}
+              </div>
+            </li>
+          );
+        }}
       />
     </Grid>
   );

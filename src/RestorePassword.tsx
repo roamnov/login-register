@@ -18,10 +18,7 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import BigLogoAndPerosnal from "./BigLogoAndPerosnal.png";
-import { styled } from "@mui/material/styles";
 import { useStyles } from "./Styles";
-import { CssTextField } from "./SignIn";
 
 const theme = createTheme();
 
@@ -93,7 +90,7 @@ export default function RestorePassword(props: any) {
             sx={{ mt: 1 }}
           >
             <img
-              src={BigLogoAndPerosnal}
+              src={"logo.png"}
               style={{ marginLeft: "29%", width: "45%" }}
             />
             <Grow in={true} timeout={200} style={{ transformOrigin: "0 0 0" }}>

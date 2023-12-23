@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  Grid,
-  Autocomplete,
-  CircularProgress,
-  styled,
-} from "@mui/material";
+import { Grid, Autocomplete, CircularProgress, styled } from "@mui/material";
 import { CssTextField } from "../SignIn";
 import axios from "axios";
 import parse from "autosuggest-highlight/parse";
@@ -39,18 +34,19 @@ const SelectOrg = (props) => {
     <Grid item xs={12} sm={12}>
       <Autocomplete
         loading={loading}
-        onOpen={()=>{
+        onOpen={() => {
           setOrgList([]);
           getOrg();
         }}
         loadingText={<CircularProgress />}
         disableClearable
-        filterOptions={(options, state) => options}
-        disablePortal
+        // filterOptions={(options, state) => options}
+        // handleHomeEndKeys
         fullWidth
         value={value}
+        noOptionsText="Ничего не найденою"
         onChange={(event, newValue) => {
-          setValue(value)
+          setValue(value);
           props.setBackInfo(newValue.inn);
         }}
         inputValue={inputValue}
@@ -71,28 +67,26 @@ const SelectOrg = (props) => {
           />
         )}
         renderOption={(props, option, { inputValue }) => {
-          if(option && inputValue){
-            const text = option.text;
-            const matches = match(text, inputValue);
-            const parts = parse(text, matches);
-    
-            return (
-              <li {...props}>
-                <div>
-                  {parts.map((part, index) => (
-                    <span
-                      key={index}
-                      style={{
-                        fontWeight: part.highlight ? 700 : 400,
-                      }}
-                    >
-                      {part.text}
-                    </span>
-                  ))}
-                </div>
-              </li>
-            );
-          }
+          const text = option.name;
+          const matches = match(text, inputValue);
+          const parts = parse(text, matches);
+
+          return (
+            <li {...props}>
+              <div>
+                {parts.map((part, index) => (
+                  <span
+                    key={index}
+                    style={{
+                      fontWeight: part.highlight ? 700 : 400,
+                    }}
+                  >
+                    {part.text}
+                  </span>
+                ))}
+              </div>
+            </li>
+          );
         }}
       />
     </Grid>

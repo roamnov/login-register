@@ -10,6 +10,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Container from "@mui/material/Container";
 import axios from "axios";
 //import SelectOrg from './SelectOrg';
+import HelpIcon from "@mui/icons-material/Help";
 import { Link } from "react-router-dom";
 import AlertDialogSlide from "./Alert";
 import { TransitionProps } from "@mui/material/transitions";
@@ -27,7 +28,6 @@ import {
   styled,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import BigLogoAndPerosnal from "../BigLogoAndPerosnal.png";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { CssTextField } from "../SignIn";
 import { useStyles } from "../Styles";
@@ -35,7 +35,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ruRU } from "@mui/x-date-pickers/locales";
 import { DateField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -62,14 +61,12 @@ export default function SignUpUMI() {
     /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.])(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$/
   );
   document.title = "Регистрация";
-  const CurrentDate = new Date();
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = React.useState(false);
   const [message, setMessage] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [ContractDate, setContractDate] = React.useState<any>(null);
   const [captcha, setCaptcha] = React.useState("");
   const [DataCaptcha, setDataCapctha] = React.useState<any>({
     passed: window.BASE_CAPTCHA === "0" ? true : false,
@@ -240,20 +237,10 @@ export default function SignUpUMI() {
     const data = new FormData(event.currentTarget);
     let errors = "";
     let SignUpData = {
+      regcode: data.get("regcode"),
       login: data.get("login"),
       email: data.get("email"),
       password: data.get("password"),
-      INN: data.get("INN"),
-      LastName: data.get("LastName"),
-      FirstName: data.get("FirstName"),
-      MiddleName: data.get("MiddleName"),
-      ContractNumber: data.get("ContractNumber"),
-      ContractDate:
-        ContractDate["$D"] +
-        "." +
-        (ContractDate["$M"] + 1) +
-        "." +
-        ContractDate["$y"],
     };
 
     if (!checked) {
@@ -329,7 +316,7 @@ export default function SignUpUMI() {
           alignItems: "center",
         }}
       >
-        <img src={BigLogoAndPerosnal} style={{ width: "45%" }} />
+        <img src={"logo.png"} style={{ width: "45%" }} />
         <Box
           component="form"
           noValidate
@@ -345,7 +332,25 @@ export default function SignUpUMI() {
                 style={{ transformOrigin: "0 0 0" }}
               >
                 <CssTextField
-                  required
+                  fullWidth
+                  id="regcode"
+                  label="Регистрационный код"
+                  name="regcode"
+                  error={error.search("regcode") !== -1}
+                  helperText={
+                    error.search("regcode") !== -1 ? "Заполните поле" : ""
+                  }
+                  onChange={unableError}
+                />
+              </Grow>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Grow
+                in={true}
+                timeout={200}
+                style={{ transformOrigin: "0 0 0" }}
+              >
+                <CssTextField
                   fullWidth
                   id="login"
                   label="Логин"
@@ -358,27 +363,7 @@ export default function SignUpUMI() {
                 />
               </Grow>
             </Grid>
-            <Grid item xs={12} sm={12}>
-              <Grow
-                in={true}
-                timeout={250}
-                style={{ transformOrigin: "0 0 0" }}
-              >
-                <CssTextField
-                  value={email}
-                  onChange={handleChange}
-                  required
-                  fullWidth
-                  id="email"
-                  label="E-mail"
-                  name="email"
-                  error={error.search("email") !== -1}
-                  helperText={
-                    error.search("email") !== -1 ? "Заполните поле" : ""
-                  }
-                />
-              </Grow>
-            </Grid>
+
             <Grid item xs={12} sm={12}>
               <Grow
                 in={true}
@@ -395,7 +380,6 @@ export default function SignUpUMI() {
                   }}
                 >
                   <InputLabel
-                    required
                     htmlFor="password"
                     sx={{ "&.Mui-focused": { color: "#3c5b77" } }}
                   >
@@ -404,7 +388,6 @@ export default function SignUpUMI() {
 
                   <OutlinedInput
                     type={showpassword ? "text" : "password"}
-                    required
                     value={password}
                     fullWidth
                     id="password"
@@ -448,7 +431,6 @@ export default function SignUpUMI() {
                   }}
                 >
                   <InputLabel
-                    required
                     htmlFor="passwordSubmit"
                     sx={{ "&.Mui-focused": { color: "#3c5b77" } }}
                   >
@@ -456,7 +438,6 @@ export default function SignUpUMI() {
                   </InputLabel>
                   <OutlinedInput
                     type={showpassword ? "text" : "password"}
-                    required
                     fullWidth
                     id="passwordSubmit"
                     label="Подтвердите пароль"
@@ -484,156 +465,22 @@ export default function SignUpUMI() {
             <Grid item xs={12} sm={12}>
               <Grow
                 in={true}
-                timeout={350}
+                timeout={250}
                 style={{ transformOrigin: "0 0 0" }}
               >
                 <CssTextField
-                  required
+                  value={email}
+                  onChange={handleChange}
                   fullWidth
-                  id="INN"
-                  label="ИНН"
-                  name="INN"
-                  error={error.search("INN") !== -1}
-                  onChange={unableError}
+                  id="email"
+                  label="E-mail"
+                  name="email"
+                  error={error.search("email") !== -1}
                   helperText={
-                    error.search("INN") !== -1 ? "Заполните поле" : ""
+                    error.search("email") !== -1 ? "Заполните поле" : ""
                   }
                 />
               </Grow>
-            </Grid>
-            {/* <Grid item xs={12} sm={12}>
-              <CssTextField
-                required
-                fullWidth
-                id="FIO"
-                label="ФИО"
-                name="FIO"
-                error={error.search("FIO") !== -1}
-              />
-            </Grid> */}
-            <Grid item xs={12} sm={12}>
-              <Grow
-                in={true}
-                timeout={400}
-                style={{ transformOrigin: "0 0 0" }}
-              >
-                <CssTextField
-                  required
-                  fullWidth
-                  id="LastName"
-                  label="Фамилия"
-                  name="LastName"
-                  error={error.search("LastName") !== -1}
-                  onChange={unableError}
-                  helperText={
-                    error.search("LastName") !== -1 ? "Заполните поле" : ""
-                  }
-                />
-              </Grow>
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <Grow
-                in={true}
-                timeout={410}
-                style={{ transformOrigin: "0 0 0" }}
-              >
-                <CssTextField
-                  required
-                  fullWidth
-                  id="FirstName"
-                  label="Имя"
-                  name="FirstName"
-                  error={error.search("FirstName") !== -1}
-                  onChange={unableError}
-                  helperText={
-                    error.search("FirstName") !== -1 ? "Заполните поле" : ""
-                  }
-                />
-              </Grow>
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <Grow
-                in={true}
-                timeout={420}
-                style={{ transformOrigin: "0 0 0" }}
-              >
-                <CssTextField
-                  // required
-                  fullWidth
-                  id="MiddleName"
-                  label="Отчество"
-                  name="MiddleName"
-                  error={error.search("MiddleName") !== -1}
-                  onChange={unableError}
-                  helperText={
-                    error.search("MiddleName") !== -1 ? "Заполните поле" : ""
-                  }
-                />
-              </Grow>
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <Grow
-                in={true}
-                timeout={470}
-                style={{ transformOrigin: "0 0 0" }}
-              >
-                <Grid
-                  container
-                  direction="row"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Grid item xs={6} sx={{ pr: 1 }}>
-                    <CssTextField
-                      required
-                      id="ContractNumber"
-                      label="Номер договора"
-                      name="ContractNumber"
-                      error={error.search("ContractNumber") !== -1}
-                      onChange={unableError}
-                    />
-                  </Grid>
-                  <Grid item xs={6} sx={{ pl: 1 }}>
-                    {/* <CssTextField
-                      required
-                      id="ContractDate"
-                      label="Дата договора"
-                      name="ContractDate"
-                      error={error.search("ContractDate") !== -1}
-                      onChange={unableError}
-                    /> */}
-                    <LocalizationProvider
-                      dateAdapter={AdapterDayjs}
-                      adapterLocale={"ru"}
-                      localeText={
-                        ruRU.components.MuiLocalizationProvider.defaultProps
-                          .localeText
-                      }
-                    >
-                      <DateField
-                        value={ContractDate}
-                        onChange={(newValue: any) => setContractDate(newValue)}
-                        format="DD.MM.YYYY"
-                        label={"Дата договора"}
-                        required
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#3c5b77",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#3c5b77 !important",
-                            },
-                          },
-                        }}
-                      />
-                    </LocalizationProvider>
-                  </Grid>
-                </Grid>
-              </Grow>
-            </Grid>
-            <Grid item xs={12} style={{ color: "#6f6868", userSelect: "none" }}>
-              * Поля,обязательные для заполнения
             </Grid>
             <Grid item xs={12}>
               <Grow
@@ -656,7 +503,41 @@ export default function SignUpUMI() {
                       id="checkbox"
                     />
                   }
-                  label="Я согласен на обработку персональных данных (настоящим подтверждаю, что в случае регистрации мною третьих лиц, предоставляю персональные данные с их согласия)"
+                  label={
+                    <div>
+                      Я согласен на обработку персональных данных (настоящим
+                      подтверждаю, что в случае регистрации мною третьих лиц,
+                      предоставляю персональные данные с их согласия)
+                      <Tooltip
+                        arrow
+                        title={
+                          <>
+                            <strong>
+                              По вопросам регистрации в личном кабинете Вы
+                              можете обратиться по телефону:
+                            </strong>
+                            <br />
+                            - по договорам о размещении объектов: 435-69-31;
+                            <br />
+                            - по договорам аренды имущества муниципальной казны:
+                            435-69-38;
+                            <br />
+                            - по договорам аренды нежилого фонда: 435-69-03,
+                            435-69-02;
+                            <br />- по договорам аренды земли : 435-69-29,
+                            435-69-30.
+                          </>
+                        }
+                      >
+                        <HelpIcon
+                          style={{
+                            color: "rgb(60, 91, 119)",
+                            fontSize: "100%",
+                          }}
+                        />
+                      </Tooltip>
+                    </div>
+                  }
                 />
               </Grow>
             </Grid>

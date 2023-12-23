@@ -24,8 +24,6 @@ import {
   Slide,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import BigLogoAndPerosnal from "./BigLogoAndPerosnal.png";
-import GosUslugiLogo from "./gos_logo_mobile.svg";
 import { styled } from "@mui/material/styles";
 import { useStyles } from "./Styles";
 import Grow from "@mui/material/Grow";
@@ -130,10 +128,10 @@ export default function SignIn() {
       }
     }
     if (hasURLparam("orgs")) {
-      let orgsFromUrl = getURLparam("orgs").replaceAll("-", "+").replaceAll("_", "/")
-      setOrg(
-        JSON.parse(decodeURIComponent(escape(window.atob(orgsFromUrl))))
-      );
+      let orgsFromUrl = getURLparam("orgs")
+        .replaceAll("-", "+")
+        .replaceAll("_", "/");
+      setOrg(JSON.parse(decodeURIComponent(escape(window.atob(orgsFromUrl)))));
     }
   }, []);
 
@@ -314,8 +312,13 @@ export default function SignIn() {
         setError("Выберите организацию.");
         return;
       }
-      let urlEsia = window.do_esia_org
-      urlEsia +=`&ksp=${selectOrg.ksp}` + `&snils=${org.snils}` + `&lastName=${org.lastName}` + `&middleName=${org.middleName}`+ `&firstName=${org.firstName}`
+      let urlEsia = window.do_esia_org;
+      urlEsia +=
+        `&ksp=${selectOrg.ksp}` +
+        `&snils=${org.snils}` +
+        `&lastName=${org.lastName}` +
+        `&middleName=${org.middleName}` +
+        `&firstName=${org.firstName}`;
       window.location.href = urlEsia;
       // axios
       //   .post(
@@ -367,9 +370,12 @@ export default function SignIn() {
             .replaceAll("/", "@")}`;
         if (authed_by) {
           href += `&authed_by=${authed_by}`;
-          href.replace(`&from=${window.location.href
-            .replace("#/", "")
-            .replaceAll("/", "@")}`, "")
+          href.replace(
+            `&from=${window.location.href
+              .replace("#/", "")
+              .replaceAll("/", "@")}`,
+            ""
+          );
         }
       } else {
         href =
@@ -428,7 +434,6 @@ export default function SignIn() {
         <Grow in={true} timeout={250} style={{ transformOrigin: "0 0 0" }}>
           <CssTextField
             margin="normal"
-            required
             fullWidth
             id="login"
             label="Логин"
@@ -450,7 +455,6 @@ export default function SignIn() {
             }}
           >
             <InputLabel
-              required
               htmlFor="password"
               sx={{ "&.Mui-focused": { color: "#3c5b77" } }}
             >
@@ -495,14 +499,14 @@ export default function SignIn() {
           }}
         >
           <img
-            src={BigLogoAndPerosnal}
-            style={{ marginLeft: "", width: "45%" }} // navigator.userAgent.includes("Firefox")?"3%": "29%"
+            src={"logo.png"}
+            style={{ borderRadius: "5% 5% 0 0", width: "45%" }} // navigator.userAgent.includes("Firefox")?"3%": "29%"
           />
           <Box
             component="form"
             onSubmit={handleSubmit}
             noValidate
-            sx={{ mt: 1, width: "81%" }}
+            sx={{ mt: 1, width: "396px" }}
           >
             {!org ? (
               <MainContent />

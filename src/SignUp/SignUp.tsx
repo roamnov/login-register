@@ -27,7 +27,6 @@ import {
   styled,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import BigLogoAndPerosnal from "../BigLogoAndPerosnal.png";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { CssTextField } from "../SignIn";
 import { useStyles } from "../Styles";
@@ -104,7 +103,7 @@ export default function SignUp() {
   React.useEffect(() => {
     if (window.BASE_CAPTCHA === "1") getCaptha();
   }, []);
-  
+
   const handleClickShowPassword = () => {
     setShowPassword(!showpassword);
   };
@@ -419,7 +418,7 @@ export default function SignUp() {
           alignItems: "center",
         }}
       >
-        <img src={BigLogoAndPerosnal} style={{ width: "45%" }} />
+        <img src={"logo.png"} style={{ width: "45%" }} />
         <Box
           component="form"
           noValidate
