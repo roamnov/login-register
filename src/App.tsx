@@ -19,6 +19,7 @@ declare global {
     BASE_width_logo?: any;
     BASE_LINK_TEXT?: any;
     do_esia_auth?:any;
+    titleText?:any;
   }
 }
 

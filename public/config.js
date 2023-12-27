@@ -10,7 +10,7 @@ var ORG_url = `${document.location.origin}/mobile~registration/values?type=inn`;
 var FIO_url = `${document.location.origin}/mobile~registration/values?type=snils`;// url для запроса в поле ФИО(инн сам добавится в коде)
 var do_esia_auth = "http://stim-srv.krista.ru:8080/esia"//вход через гос услуги, если что то задано, то кнопка отобразиться, и при клике на нее будет перенаправление
 var do_esia_org = "https://testlks.budget.gov35.ru/esia?what=esia_org" // адрес для отсылки информации о выборе сотрудником организации из списка возможных
-
+var titleText
 
 
 var ChangePassword_url = `${document.location.origin}/web~ChangePasswordLK`//Смена пароля принимает новый пароль
