@@ -16,7 +16,7 @@ declare global {
     BASE_UMI?: any;
     ChangePassword_url?: any;
     RestorePassword_url?: any;
-    BASE_margin_logo?: any;
+    BASE_width_logo?: any;
     BASE_LINK_TEXT?: any;
     do_esia_auth?:any;
   }

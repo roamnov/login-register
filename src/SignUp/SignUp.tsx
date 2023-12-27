@@ -418,7 +418,7 @@ export default function SignUp() {
           alignItems: "center",
         }}
       >
-        <img src={"logo.png"} style={{ width: "45%" }} />
+        <img src={"logo.png"} style={{ width: window.BASE_width_logo?window.BASE_width_logo:"45%" }} />
         <Box
           component="form"
           noValidate

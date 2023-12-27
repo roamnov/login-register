@@ -65,6 +65,7 @@ export default function SignUpUMI() {
   const [status, setStatus] = React.useState(false);
   const [message, setMessage] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [passwordSubmit, setPasswordSubmit] = React.useState("");
   const [error, setError] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [captcha, setCaptcha] = React.useState("");
@@ -260,6 +261,9 @@ export default function SignUpUMI() {
         setError(errors);
       }
     }
+    if(helperTextPassword !== ""){
+      return
+    }
     if (errors === "") {
       // services/RegistrationLK/create
       axios.post(url, JSON.stringify(SignUpData)).then((response) => {
@@ -280,28 +284,37 @@ export default function SignUpUMI() {
     setEmail(event.target.value);
   };
 
-  const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>, passtoCheck?:any) => {
     let errorLocal: any = error;
     if (event.target.id === "password") {
-      errorLocal.replace("password", "");
+      errorLocal.replaceAll("password", "");
       if (!PasswordPattern.test(event.target.value)) {
         errorLocal += "password";
         sethelperTextPassword(
           "По валидации пароля минимум 8 символов, 1 цифра, латинская буква верхнего и буква нижнего регистра."
         );
       } else {
-        sethelperTextPassword("");
+        if(event.target.value !== passwordSubmit){
+          sethelperTextPassword("Пароли должны совпадать!");
+        }else{
+          sethelperTextPassword("");
+        }
       }
       setPassword(event.target.value);
-    } else {
-      errorLocal.replace("passwordSubmit", "");
+    } else if(event.target.id === "passwordSubmit") {
+      errorLocal.replaceAll("passwordSubmit", "");
       if (password !== event.target.value) {
         errorLocal += "passwordSubmit";
+        console.log(errorLocal);
+        
         sethelperTextPassword("Пароли должны совпадать!");
       } else {
         sethelperTextPassword("");
       }
+      setPasswordSubmit(event.target.value)
     }
+    // console.log(errorLocal);
+    
     setError(errorLocal);
   };
 
@@ -316,7 +329,7 @@ export default function SignUpUMI() {
           alignItems: "center",
         }}
       >
-        <img src={"logo.png"} style={{ width: "45%" }} />
+        <img src={"logo.png"} style={{ width: window.BASE_width_logo?window.BASE_width_logo:"45%" }} />
         <Box
           component="form"
           noValidate
@@ -393,9 +406,9 @@ export default function SignUpUMI() {
                     id="password"
                     label="Пароль"
                     name="password"
-                    error={error.search("password") !== -1}
+                    error={helperTextPassword !== ""}
                     onChange={(e: any) => {
-                      handleChangePassword(e);
+                      handleChangePassword(e,);
                       unableError(e);
                     }}
                     endAdornment={
@@ -439,10 +452,11 @@ export default function SignUpUMI() {
                   <OutlinedInput
                     type={showpassword ? "text" : "password"}
                     fullWidth
+                    value={passwordSubmit}
                     id="passwordSubmit"
                     label="Подтвердите пароль"
                     name="passwordSubmit"
-                    error={error.search("passwordSubmit") !== -1}
+                    error={helperTextPassword !== ""}
                     onChange={(e: any) => {
                       handleChangePassword(e);
                       unableError(e);
@@ -508,34 +522,6 @@ export default function SignUpUMI() {
                       Я согласен на обработку персональных данных (настоящим
                       подтверждаю, что в случае регистрации мною третьих лиц,
                       предоставляю персональные данные с их согласия)
-                      <Tooltip
-                        arrow
-                        title={
-                          <>
-                            <strong>
-                              По вопросам регистрации в личном кабинете Вы
-                              можете обратиться по телефону:
-                            </strong>
-                            <br />
-                            - по договорам о размещении объектов: 435-69-31;
-                            <br />
-                            - по договорам аренды имущества муниципальной казны:
-                            435-69-38;
-                            <br />
-                            - по договорам аренды нежилого фонда: 435-69-03,
-                            435-69-02;
-                            <br />- по договорам аренды земли : 435-69-29,
-                            435-69-30.
-                          </>
-                        }
-                      >
-                        <HelpIcon
-                          style={{
-                            color: "rgb(60, 91, 119)",
-                            fontSize: "100%",
-                          }}
-                        />
-                      </Tooltip>
                     </div>
                   }
                 />
@@ -562,11 +548,42 @@ export default function SignUpUMI() {
             </Button>
           </Grow>
           <Grow in={true} timeout={510} style={{ transformOrigin: "0 0 0" }}>
-            <Grid container justifyContent="flex-end">
+            <Grid container   justifyContent="space-between">
               <Grid item>
                 <Link to={"/"} className={styles.link}>
                   Уже есть учётная запись? Войти
                 </Link>
+
+              </Grid>
+              <Grid item>
+              <Tooltip
+                  arrow
+                  title={
+                    <>
+                      <strong>
+                        По вопросам регистрации в личном кабинете Вы можете
+                        обратиться по телефону:
+                      </strong>
+                      <br />
+                      - по договорам о размещении объектов: 435-69-31;
+                      <br />
+                      - по договорам аренды имущества муниципальной казны:
+                      435-69-38;
+                      <br />
+                      - по договорам аренды нежилого фонда: 435-69-03,
+                      435-69-02;
+                      <br />- по договорам аренды земли : 435-69-29, 435-69-30.
+                    </>
+                  }
+                >
+                  <HelpIcon
+                    fontSize="small"
+                    style={{
+                      color: "rgb(60, 91, 119)",
+                      // fontSize: "100%",
+                    }}
+                  />
+                </Tooltip>
               </Grid>
             </Grid>
           </Grow>
